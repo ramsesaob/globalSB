@@ -1,0 +1,80 @@
+.custom-select {
+    background-color: blue;
+    color: white;
+  }
+  
+.navbar {
+  background: #a8ff78;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #78ffd6, #a8ff78);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #78ffd6, #a8ff78); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+.header-color {
+  background-color: #5be496;
+}
+
+.table-anulada {
+  background-color: rgb(226, 164, 164);
+}
+.table-validada {
+  background-color: rgb(147, 212, 161);
+}
+.table-semi {
+  background-color: rgb(245, 183, 90);
+}
+.table-NoValidada {
+  background-color: rgb(170, 168, 168);
+}
+.bg-navidad{
+  background-color: rgb(94 175 168);
+}
+@media (max-width: 767px) {
+  .bor {
+    
+    border: 1px solid rgb(40, 75, 40);
+    padding : 10px;
+    max-width: 90%;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 2px;
+    background-color: #e2e2e2;
+    
+  }
+}
+
+/* styles.css */  
+.p-datatable .p-datatable-thead > tr > th,  
+.p-datatable .p-datatable-tbody > tr  {  
+    border: 1px solid #ccc; /* Cambia el color y el estilo del borde según tus preferencias */  
+}  
+
+.p-column-title {
+  align-content: center;
+}
+
+/* Oculta los filtros por defecto */
+/* Ajustes opcionales para los filtros */
+/* styles.css */
+.p-datatable.filters-visible .p-column-filter {
+  display: block; /* Muestra cuando la clase filters-visible está presente */
+  width: 100%; /* Asegura que el contenedor de los filtros ocupa todo el ancho disponible */
+}
+
+/* Asegura que el contenedor del filtro ocupa todo el ancho disponible */
+.p-datatable .p-column-filter {
+  width: 100% !important; /* Usa !important para asegurarte de que este estilo se aplique */
+  box-sizing: border-box; /* Incluye padding y border en el ancho total */
+  display: none; /* Oculta por defecto */
+}
+
+/* Ajusta el ancho del elemento que contiene el input */
+.p-datatable .p-column-filter .p-fluid {
+  width: 100% !important; /* Usa !important para asegurarte de que este estilo se aplique */
+  box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+
+
+
+
+;
