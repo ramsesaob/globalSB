@@ -170,6 +170,7 @@ const Formulario = () => {
               numero_ped: getNextNumeroPed(),
               descripcion: motivoSeleccionado,
               anulada: 1,
+              tipo: 'P',
               Status_aprobada: 'Pendiente', // Pendiente,
               productos: productos.map(producto => ({
                 articulo_id: producto.id,
@@ -276,9 +277,9 @@ const Formulario = () => {
                 required // Hacer el campo obligatorio
               >
                 <option value="">(Seleccione)</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+                <option value="1">Alta Rotación</option>
+                <option value="2">Ventas al mayor</option>
+                <option value="3">Ventas de Clientes Especiales</option>
               </select>
             </div>
           </div>
@@ -342,7 +343,7 @@ const Formulario = () => {
             ))}
           </div>
           <div className='text-center py-3'>
-            <p className='fw-bolder text-danger'>Cantidad de Artículos  Agregados en la Orden: "{productos.length}"</p>
+            <p className='fw-bolder text-danger'>Cantidad de Artículos Agregados en la Orden: "{productos.length}"</p>
             <input className="btn btn-primary text-center" type="submit" value="ENVIAR" />
             
           </div>

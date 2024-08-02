@@ -123,12 +123,31 @@ const ViewPage = () => {
             ) : (
               ''
             )}
-            <p className="card-text"><strong>Motivo:</strong> {ordenPedido.descripcion}</p>
-            <p className="card-text"><strong>Solicitante:</strong> {ordenPedido.user.nombre}</p>
-            <p className="card-text"><strong>Creado:</strong> {new Date(ordenPedido.created).toLocaleString()}</p>
-            <p className="card-text"><strong>Status:</strong> {ordenPedido.Status_aprobada}</p>
-  
-            <div className="mt-4">
+            <div className='row '>
+              <div className='col-lg-6'>
+              <p className="card-text"><strong>Motivo: </strong>
+                          {ordenPedido.descripcion === '1' ? 'Alta Rotación' :
+                          ordenPedido.descripcion === '2' ? 'Ventas al por mayor' :
+                          ordenPedido.descripcion === '3' ? 'Ventas de Clientes Especiales' :
+                          'Descripción desconocida'} {/* Opcional */}
+                        </p>
+              </div>
+              <div className='col-lg-6 py-1'>
+              <p className="card-text"><strong>Solicitante:</strong> {ordenPedido.user.nombre}</p>
+              </div>
+              <div className='col-lg-6'>
+              <p className="card-text"><strong>Creado:</strong> {new Date(ordenPedido.created).toLocaleString()}</p>
+              </div>
+              <div className='col-lg-6 py-1'>
+              <p className="card-text"><strong>Status:</strong> {ordenPedido.Status_aprobada}</p>
+              </div>
+              <div className='col-lg-6'>
+              <p className="card-text"><strong>Tipo: </strong>{ordenPedido.tipo === 'P' ? ('Normal') : ('Navidad')} </p> 
+              </div>
+              
+            </div>
+           
+            <div className="mt-1">
               <h5 className="mb-3 text-center">Artículos de la Orden</h5>
               <div className="table-responsive">
                 <table className="table table-striped table-hover table-bordered table-condensed table-responsive text-center" id="table_id">
@@ -160,6 +179,7 @@ const ViewPage = () => {
                 <>
                 <ExportView1 ordenPedido={ordenPedido} id={id} />
                 <ExportView2 ordenPedido={ordenPedido} id={id} />
+                <ExportView3 ordenPedido={ordenPedido} id={id} />
                 </>
                 
               )}

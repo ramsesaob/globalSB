@@ -130,6 +130,14 @@ const IndexPage = () => {
   const anuladaTemplate = (rowData) => (
     <i className={`btn btn-lg bx ${parseInt(rowData.anulada) == 0 ? 'bx-block btn-sm' : 'bx-check-circle'}`} style={{ color: parseInt(rowData.anulada) == 0 ? '#f10b0b' : '#1ef100' }} />
   );
+  const tipoTemplate = (rowData) => {
+    if (rowData.tipo === 'P') {
+      return 'Normal'; 
+    }
+    if (rowData.tipo === 'N') {
+      return 'Navidad';
+  }
+  };
 
   const rowClassName = (rowData) => {
     return parseInt(rowData.anulada) == 0 ? 'table-anulada' : ''; // Aplica clase 'table-anulada' si anulada es 0
@@ -214,6 +222,7 @@ const IndexPage = () => {
         <Column field="sucursal" header="Sucursal" sortable headerStyle={headerStyle} bodyStyle={{ textAlign: 'center', fontSize: '0.8rem' }} filter filterPlaceholder="Buscar por Sucursal" />
         <Column field="Status_aprobada" header="Status" sortable headerStyle={headerStyle} bodyStyle={{ textAlign: 'center', fontSize: '0.8rem' }} bodyClassName={rowClass} filter filterPlaceholder="Buscar por Status" />
         <Column field="anulada" header="Activa" body={anuladaTemplate} sortable headerStyle={headerStyle} bodyStyle={{ textAlign: 'center', fontSize: '0.8rem' }} />
+        <Column field="tipo" header="Tipo" body={tipoTemplate} sortable headerStyle={headerStyle} bodyStyle={{ textAlign: 'center', fontSize: '0.8rem' }} />
         <Column header="Acciones" body={actionTemplate} headerStyle={headerStyle} bodyStyle={{ textAlign: 'center', fontSize: '0.8rem' }} />
       </DataTable>
     </div>

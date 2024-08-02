@@ -101,17 +101,14 @@ const Header = () => {
                             <Link to="/Inicio" className="nav-link active" aria-current="page" href="#"> <i className='bx bx-home' ></i>Inicio</Link>
                         </li>
                       
-                        <li className="nav-item">
-                              <Link to="/Formulario" className="nav-link active" aria-current="page" href="#"><i className='bx bx-list-ul'></i> Solicitud</Link>
-                        </li>
-                          <li className="nav-item dropdown">
-                            <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <li className="nav-item dropdown">
+                            <a className="nav-link active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i className='bx bx-list-ul'></i> Solicitud
                             </a>
                             <ul className="dropdown-menu">
-                              <li><a className="dropdown-item" href="#">Action</a></li>
-                              <li><a className="dropdown-item" href="#">Another action</a></li>
-                              <li><a className="dropdown-item" href="#">Something else here</a></li>
+                              <li><Link to="/Formulario" className="nav-link active" aria-current="page" href="#"> Solicitud </Link></li>
+                              <li><Link to="/Formulario2" className="nav-link active" aria-current="page" href="#">Solicitud Navidad</Link></li>
+                            
                             </ul>
                           </li>
 

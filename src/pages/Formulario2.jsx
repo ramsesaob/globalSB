@@ -8,8 +8,8 @@ import { carritoContext } from "../contexts/carritoContext";
 const Formulario2 = () => {
     const location = useLocation();
     const { datosUsuario } = useContext(carritoContext);
-    const [productos, setProductos] = useState(() => {
-    const savedProducts = localStorage.getItem('productos');
+    const [productosnav, setProductosnav] = useState(() => {
+    const savedProducts = localStorage.getItem('productosnav');
       return savedProducts ? JSON.parse(savedProducts) : [];
     });
     const [errorDescripcion, setErrorDescripcion] = useState('');
@@ -26,21 +26,21 @@ const Formulario2 = () => {
     }, []);
   
     useEffect(() => {
-      const storedProductos = JSON.parse(localStorage.getItem('productos')) || [];
-      setProductos(storedProductos);
+      const storedProductos = JSON.parse(localStorage.getItem('productosnav')) || [];
+      setProductosnav(storedProductos);
     }, []);
   
     useEffect(() => {
-      localStorage.setItem('productos', JSON.stringify(productos));
-    }, [productos]);
+      localStorage.setItem('productosnav', JSON.stringify(productosnav));
+    }, [productosnav]);
   
    
     const handleSearchSerial = async (index) => {
       try {
-        const serial = productos[index].serial;
+        const serial = productosnav[index].serial;
         const { id, descripcion, empaque } = await buscarDescripcion(serial);
   
-        setProductos(prevProductos => {
+        setProductosnav(prevProductos => {
           const updatedProductos = [...prevProductos];
           updatedProductos[index] = {
             ...updatedProductos[index],
@@ -61,7 +61,7 @@ const Formulario2 = () => {
   
     const buscarDescripcion = async (serial) => {
       try {
-        const response = await fetch(`http://192.168.0.107/ped2/articulos/serial.json?codigos=${serial}`);
+        const response = await fetch(`http://192.168.0.107/ped2/articulos/serialnavidad.json?codigos=${serial}`);
         const data = await response.json();
   
         if (!data || !data.articulos || data.articulos.length === 0) {
@@ -82,7 +82,7 @@ const Formulario2 = () => {
     };
   
     const handleProductChange = (index, event, field) => {
-      const updatedProducts = [...productos];
+      const updatedProducts = [...productosnav];
       let value = event.target.value;
     
       // Validar que no se ingresen puntos en lugar de comas
@@ -96,18 +96,18 @@ const Formulario2 = () => {
       // Permitir que el usuario siga escribiendo decimales después de la coma
       updatedProducts[index][field] = value;
     
-      setProductos(updatedProducts);
+      setProductosnav(updatedProducts);
     };
     
    
     const agregarProducto = () => {
       const nuevoProducto = { serial: '', descripcion: '', cantidad: '' };
-      setProductos([...productos, nuevoProducto]);
+      setProductosnav([...productosnav, nuevoProducto]);
     };
   
     const eliminarProducto = (index) => {
-      const updatedProducts = productos.filter((_, i) => i !== index);
-      setProductos(updatedProducts);
+      const updatedProducts = productosnav.filter((_, i) => i !== index);
+      setProductosnav(updatedProducts);
     };
   
     const getNextNumeroPed = () => {
@@ -127,7 +127,7 @@ const Formulario2 = () => {
       event.preventDefault();
     
       // Validar la cantidad mínima (empaque) y múltiplo del empaque
-      const isValid = productos.every(producto => {
+      const isValid = productosnav.every(producto => {
         if (!producto.cantidad || parseFloat(producto.cantidad) < parseFloat(producto.empaque)) {
           Swal.fire({
             icon: 'error',
@@ -169,8 +169,9 @@ const Formulario2 = () => {
                 numero_ped: getNextNumeroPed(),
                 descripcion: motivoSeleccionado,
                 anulada: 1,
+                tipo: 'N',
                 Status_aprobada: 'Pendiente', // Pendiente,
-                productos: productos.map(producto => ({
+                productos: productosnav.map(producto => ({
                   articulo_id: producto.id,
                   cantidad: producto.cantidad,
                   comentario: producto.comentario,
@@ -181,8 +182,8 @@ const Formulario2 = () => {
     
             if (response.ok) {
               console.log('Datos enviados correctamente');
-              setProductos([]);
-              localStorage.removeItem('productos'); // Limpiar productos guardados
+              setProductosnav([]);
+              localStorage.removeItem('productosnav'); // Limpiar productos guardados
               navigate('/IndexPage');
             } else {
               console.error('Error al enviar los datos');
@@ -281,9 +282,9 @@ const Formulario2 = () => {
                 required // Hacer el campo obligatorio
               >
                 <option value="">(Seleccione)</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+                <option value="1">Alta Rotación</option>
+                <option value="2">Ventas al mayor</option>
+                <option value="3">Ventas de Clientes Especiales</option>
               </select>
             </div>
           </div>
@@ -294,9 +295,9 @@ const Formulario2 = () => {
             </div>
             <div >
               <button type="button" className="btn btn-success" onClick={agregarProducto}>Agregar Producto</button>
-              <button type="button" className="btn btn-danger mx-1" onClick={() => eliminarProducto(productos.length - 1)}>Quitar Producto</button>
+              <button type="button" className="btn btn-danger mx-1" onClick={() => eliminarProducto(productosnav.length - 1)}>Quitar Producto</button>
             </div>
-            {productos.map((producto, index) => (
+            {productosnav.map((producto, index) => (
               <div key={index} className='row py-1 bor'>
                 <div className='col-sm-12 col-md-4 col-lg-4 col-xl-4'>
                   <label htmlFor="serial" className="col-sm-6 col-form-label text-center fw-bolder">(*) BUSCAR SERIAL:</label>
@@ -347,7 +348,7 @@ const Formulario2 = () => {
             ))}
           </div>
           <div className='text-center py-3'>
-            <p className='fw-bolder text-danger'>Cantidad de Artículos  Agregados en la Orden: "{productos.length}"</p>
+            <p className='fw-bolder text-danger'>Cantidad de Artículos  Agregados en la Orden: "{productosnav.length}"</p>
             <input className="btn btn-primary text-center" type="submit" value="ENVIAR" />
             
           </div>

@@ -111,6 +111,9 @@ const Verificacion = () => {
     <div className='col-md-3 col-lg-3'>
       <p className="card-text  mx-2"><strong>Status:</strong> {ordenPedido.Status_aprobada}</p>
     </div>
+    <div className='col-md-3 col-lg-3 py-1'>
+      <p className="card-text  mx-2"><strong>Tipo:</strong> {ordenPedido.tipo === 'P' ? ('Normal') : ('Navidad')}</p>
+    </div>
   </div>
       <h4 className='text-center text-danger'>Articulos Pendientes de Verificar</h4>
       <div className="table-responsive">

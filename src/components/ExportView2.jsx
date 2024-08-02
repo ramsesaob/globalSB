@@ -24,114 +24,133 @@ const ExportView2 = ({ ordenPedido }) => {
     const formatDate = (date) => {
       return format(date, 'yyyyMMdd');
     };
-
+    const tipo = (ordenPedido) => {
+      if (ordenPedido.tipo === 'P') {
+        return 'Normal'; 
+      }
+      if (ordenPedido.tipo === 'N') {
+        return 'Navidad';
+    }
+    };
+    const comentario = (ordenPedido) => {
+      switch (ordenPedido.descripcion) {
+        case '1':
+          return 'Alta Rotación';
+        case '2':
+          return 'Ventas al mayor';
+        case '3':
+          return 'Ventas de Clientes Especiales';
+        default:
+          return 'Descripción no disponible'; // Valor por defecto para casos no esperados
+      }
+    };
     // Agregar los datos debajo de las filas fijas
  
-      ws_data.push([
-        ordenPedido.numero_ped, // DocNum
-        'dDocument_Items', // DocType
-        'tNO', // HandWritten
-        '', // Printed
-        formatDate(ordenPedido.created), // DocDate
-        formatDate(ordenPedido.created), // DocDueDate (aquí se utiliza la misma fecha formateada para ambos campos)
-        'RIF', // CardCode
-        '', // CardName
-        '', // Address
-        'CH2401024', // NumAtCard
-        'BsS', // DocCurrency
-        '', // DocRate
-        '', // DocTotal
-        '', // Reference1
-        '', // Reference2
-        ordenPedido.descripcion, // Comments
-        '', // JournalMemo
-        '', // PaymentGroupCode
-        '', // DocTime
-        '', // SalesPersonCode
-        '', // TransportationCode
-        '', // Confirmed
-        '', // ImportFileNum
-        '', // SummeryType
-        '', // ContactPersonCode
-        '', // ShowSCN
-        '', // Series
-        '', // TaxDate
-        '', // PartialSupply
-        '', // DocObjectCode
-        '', // ShipToCode
-        '', // Indicator
-        '', // FederalTaxID
-        '', // DiscountPercent
-        '', // PaymentReference
-        '', // DocTotalFc
-        '', // Form1099
-        '', // Box1099
-        '', // RevisionPo
-        '', // RequriedDate
-        '', // CancelDate
-        '', // BlockDunning
-        '', // Pick
-        '', // PaymentMethod
-        '', // PaymentBlock
-        '', // PaymentBlockEntry
-        '', // CentralBankIndicator
-        '', // MaximumCashDiscount
-        '', // Project
-        '', // ExemptionValidityDateFrom
-        '', // ExemptionValidityDateTo
-        '', // WareHouseUpdateType
-        '', // Rounding
-        '', // ExternalCorrectedDocNum
-        '', // InternalCorrectedDocNum
-        '', // DeferredTax
-        '', // TaxExemptionLetterNum
-        '', // AgentCode
-        '', // NumberOfInstallments
-        '', // ApplyTaxOnFirstInstallment
-        '', // VatDate
-        '', // DocumentsOwner
-        '', // FolioPrefixString
-        '', // FolioNumber
-        '', // DocumentSubType
-        '', // BPChannelCode
-        '', // BPChannelContact
-        '', // Address2
-        '', // PayToCode
-        '', // ManualNumber
-        '', // UseShpdGoodsAct
-        '', // IsPayToBank
-        '', // PayToBankCountry
-        '', // PayToBankCode
-        '', // PayToBankAccountNo
-        '', // PayToBankBranch
-        'numero de sucursal', // BPL_IDAssignedToInvoice
-        '', // DownPayment
-        '', // ReserveInvoice
-        '', // LanguageCode
-        '', // TrackingNumber
-        '', // PickRemark
-        '', // ClosingDate
-        '', // SequenceCode
-        '', // SequenceSerial
-        '', // SeriesString
-        '', // SubSeriesString
-        '', // SequenceModel
-        '', // UseCorrectionVATGroup
-        '', // DownPaymentAmount
-        '', // DownPaymentPercentage
-        '', // DownPaymentType
-        '', // DownPaymentAmountSC
-        '', // DownPaymentAmountFC
-        '', // VatPercent
-        '', // ServiceGrossProfitPercent
-        '', // OpeningRemarks
-        '', // ClosingRemarks
-        '', // RoundingDiffAmount
-        '', // ControlAccount
-        '', // InsuranceOperation347
-        ''  // ArchiveNonremovableSalesQuotation
-      ]);
-  
+    ws_data.push([
+      ordenPedido.numero_ped, // DocNum
+      'dDocument_Items', // DocType
+      'tNO', // HandWritten
+      '', // Printed
+      formatDate(ordenPedido.created), // DocDate
+      formatDate(ordenPedido.created), // DocDueDate
+      ordenPedido.user.sucursale.cliente, // CardCode (Cliente)
+      '', // CardName
+      '', // Address
+      'CH2401024', // NumAtCard
+      'BsS', // DocCurrency
+      '', // DocRate
+      '', // DocTotal
+      '', // Reference1
+      '', // Reference2
+      comentario(ordenPedido), // Comments
+      '', // JournalMemo
+      '', // PaymentGroupCode
+      '', // DocTime
+      '', // SalesPersonCode
+      '', // TransportationCode
+      '', // Confirmed
+      '', // ImportFileNum
+      '', // SummeryType
+      '', // ContactPersonCode
+      '', // ShowSCN
+      '', // Series
+      '', // TaxDate
+      '', // PartialSupply
+      '', // DocObjectCode
+      '', // ShipToCode
+      '', // Indicator
+      '', // FederalTaxID
+      '', // DiscountPercent
+      '', // PaymentReference
+      '', // DocTotalFc
+      '', // Form1099
+      '', // Box1099
+      '', // RevisionPo
+      '', // RequriedDate
+      '', // CancelDate
+      '', // BlockDunning
+      '', // Pick
+      '', // PaymentMethod
+      '', // PaymentBlock
+      '', // PaymentBlockEntry
+      '', // CentralBankIndicator
+      '', // MaximumCashDiscount
+      '', // Project
+      '', // ExemptionValidityDateFrom
+      '', // ExemptionValidityDateTo
+      '', // WareHouseUpdateType
+      '', // Rounding
+      '', // ExternalCorrectedDocNum
+      '', // InternalCorrectedDocNum
+      '', // DeferredTax
+      '', // TaxExemptionLetterNum
+      '', // AgentCode
+      '', // NumberOfInstallments
+      '', // ApplyTaxOnFirstInstallment
+      '', // VatDate
+      '', // DocumentsOwner
+      '', // FolioPrefixString
+      '', // FolioNumber
+      '', // DocumentSubType
+      '', // BPChannelCode
+      '', // BPChannelContact
+      '', // Address2
+      '', // PayToCode
+      '', // ManualNumber
+      '', // UseShpdGoodsAct
+      '', // IsPayToBank
+      '', // PayToBankCountry
+      '', // PayToBankCode
+      '', // PayToBankAccountNo
+      '', // PayToBankBranch
+      ordenPedido.user.sucursale.numero_id, // BPL_IDAssignedToInvoice (Número de sucursal)
+      '', // DownPayment
+      '', // ReserveInvoice
+      '', // LanguageCode
+      '', // TrackingNumber
+      '', // PickRemark
+      '', // ClosingDate
+      '', // SequenceCode
+      '', // SequenceSerial
+      '', // SeriesString
+      '', // SubSeriesString
+      '', // SequenceModel
+      '', // UseCorrectionVATGroup
+      '', // DownPaymentAmount
+      '', // DownPaymentPercentage
+      '', // DownPaymentType
+      '', // DownPaymentAmountSC
+      '', // DownPaymentAmountFC
+      '', // VatPercent
+      '', // ServiceGrossProfitPercent
+      '', // OpeningRemarks
+      '', // ClosingRemarks
+      '', // RoundingDiffAmount
+      '', // ControlAccount
+      '', // InsuranceOperation347
+      ''  // ArchiveNonremovableSalesQuotation
+    ]);
+ 
 
     // Crear una nueva hoja de cálculo
     const ws = XLSX.utils.aoa_to_sheet(ws_data);
