@@ -220,7 +220,7 @@ const Formulario = () => {
               <img src={logo2} alt="garantia" width={50} className='rounded mx-1'/>
             </div>
             <div>
-              <h3 className="py-2 text-center">Ingrese los Datos de la Solicitud de Reposición </h3>
+              <h3 className="py-2 text-center">Solicitud de Reposición Estándar </h3>
             </div>
             <div>
               <img src={logo2} alt="garantia" width={50} />

@@ -132,7 +132,7 @@ const IndexPage = () => {
   );
   const tipoTemplate = (rowData) => {
     if (rowData.tipo === 'P') {
-      return 'Normal'; 
+      return 'Estándar'; 
     }
     if (rowData.tipo === 'N') {
       return 'Navidad';

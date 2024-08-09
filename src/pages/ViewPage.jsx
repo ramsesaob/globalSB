@@ -124,6 +124,9 @@ const ViewPage = () => {
               ''
             )}
             <div className='row '>
+            <div className='col-lg-6'>
+              <p className="card-text"><strong>Creado:</strong> {new Date(ordenPedido.created).toLocaleString()}</p>
+              </div>
               <div className='col-lg-6'>
               <p className="card-text"><strong>Motivo: </strong>
                           {ordenPedido.descripcion === '1' ? 'Alta Rotación' :
@@ -135,14 +138,12 @@ const ViewPage = () => {
               <div className='col-lg-6 py-1'>
               <p className="card-text"><strong>Solicitante:</strong> {ordenPedido.user.nombre}</p>
               </div>
-              <div className='col-lg-6'>
-              <p className="card-text"><strong>Creado:</strong> {new Date(ordenPedido.created).toLocaleString()}</p>
-              </div>
+             
               <div className='col-lg-6 py-1'>
               <p className="card-text"><strong>Status:</strong> {ordenPedido.Status_aprobada}</p>
               </div>
               <div className='col-lg-6'>
-              <p className="card-text"><strong>Tipo: </strong>{ordenPedido.tipo === 'P' ? ('Normal') : ('Navidad')} </p> 
+              <p className="card-text"><strong>Tipo: </strong>{ordenPedido.tipo === 'P' ? ('Estándar') : ('Navidad')} </p> 
               </div>
               
             </div>
