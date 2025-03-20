@@ -17,7 +17,7 @@ const ExportView3 = ({ ordenPedido, id }) => {
     const ws_data = [
         ['Orden de Pedido', ordenPedido.numero_ped],
         ['Sucursal', ordenPedido.user.sucursale ? ordenPedido.user.sucursale.descripcion : 'Sin sucursal especificada'],
-        ['Code', 'Description', 'Quantity']
+        ['Code', 'Description', 'Cantidad Solicitada', 'Cantidad Enviada', 'Despacho', 'Comentario'],
       ];
       
       // Agregar los datos debajo de las filas fijas
@@ -25,7 +25,11 @@ const ExportView3 = ({ ordenPedido, id }) => {
         ws_data.push([
           item.articulo.codigo,
           item.articulo.descripcion,
-          item.cantidad
+          item.cantidad,
+          item.cantidad_val,
+          item.traslado == '1' ? 'Almacen' :
+          item.traslado == '2' ? 'Traslado Tienda' : '',
+          item.comentario
         ]);
       });
 

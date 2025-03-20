@@ -1,80 +1,178 @@
 .custom-select {
-    background-color: blue;
-    color: white;
-  }
-  
+  background-color: blue;
+  color: white;
+}
+
 .navbar {
-  background: #a8ff78;  /* fallback for old browsers */
+background: #a8ff78;  /* fallback for old browsers */
 background: -webkit-linear-gradient(to left, #78ffd6, #a8ff78);  /* Chrome 10-25, Safari 5.1-6 */
 background: linear-gradient(to left, #78ffd6, #a8ff78); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
 }
 .header-color {
-  background-color: #5be496;
+background-color: #5be496;
 }
 
 .table-anulada {
-  background-color: rgb(226, 164, 164);
+background-color: rgb(226, 164, 164);
 }
 .table-validada {
-  background-color: rgb(147, 212, 161);
+background-color: rgb(147, 212, 161);
 }
 .table-semi {
-  background-color: rgb(245, 183, 90);
+background-color: rgb(245, 183, 90);
 }
 .table-NoValidada {
-  background-color: rgb(170, 168, 168);
+background-color: rgb(170, 168, 168);
 }
 .bg-navidad{
-  background-color: rgb(94 175 168);
+background-color: rgb(94 175 168);
 }
 @media (max-width: 767px) {
-  .bor {
-    
-    border: 1px solid rgb(40, 75, 40);
-    padding : 10px;
-    max-width: 90%;
-    margin-bottom: 10px;
-    margin-top: 10px;
-    margin-left: 2px;
-    background-color: #e2e2e2;
-    
-  }
+.bor {
+  
+  border: 1px solid rgb(40, 75, 40);
+  padding : 10px;
+  max-width: 90%;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  margin-left: 2px;
+  background-color: #e2e2e2;
+  
+}
 }
 
 /* styles.css */  
 .p-datatable .p-datatable-thead > tr > th,  
 .p-datatable .p-datatable-tbody > tr  {  
-    border: 1px solid #ccc; /* Cambia el color y el estilo del borde según tus preferencias */  
+  border: 1px solid #ccc; /* Cambia el color y el estilo del borde según tus preferencias */  
 }  
 
 .p-column-title {
-  align-content: center;
+align-content: center;
 }
 
 /* Oculta los filtros por defecto */
 /* Ajustes opcionales para los filtros */
 /* styles.css */
 .p-datatable.filters-visible .p-column-filter {
-  display: block; /* Muestra cuando la clase filters-visible está presente */
-  width: 100%; /* Asegura que el contenedor de los filtros ocupa todo el ancho disponible */
+display: block; /* Muestra cuando la clase filters-visible está presente */
+width: 100%; /* Asegura que el contenedor de los filtros ocupa todo el ancho disponible */
 }
 
 /* Asegura que el contenedor del filtro ocupa todo el ancho disponible */
 .p-datatable .p-column-filter {
-  width: 100% !important; /* Usa !important para asegurarte de que este estilo se aplique */
-  box-sizing: border-box; /* Incluye padding y border en el ancho total */
-  display: none; /* Oculta por defecto */
+width: 100% !important; /* Usa !important para asegurarte de que este estilo se aplique */
+box-sizing: border-box; /* Incluye padding y border en el ancho total */
+display: none; /* Oculta por defecto */
 }
 
 /* Ajusta el ancho del elemento que contiene el input */
 .p-datatable .p-column-filter .p-fluid {
-  width: 100% !important; /* Usa !important para asegurarte de que este estilo se aplique */
-  box-sizing: border-box; /* Incluye padding y border en el ancho total */
+width: 100% !important; /* Usa !important para asegurarte de que este estilo se aplique */
+box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+/* Perfil.css */
+.profile-container {
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+background-color: #f4f4f4;
+padding: 20px;
+}
+
+.profile-card {
+background-color: #fff;
+border-radius: 8px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+max-width: 600px;
+width: 100%;
+padding: 20px;
+}
+
+.profile-card h2 {
+margin-top: 0;
+}
+
+.profile-details {
+display: flex;
+flex-direction: column;
+}
+
+.profile-item {
+margin-bottom: 10px;
+}
+
+.profile-item strong {
+display: inline-block;
+width: 120px;
 }
 
 
+.custom-file-input {
+width: 80%; /* Ajusta el porcentaje según el tamaño deseado */
+max-width: 500px; /* Opcional: Establece un ancho máximo */
+}
+
+.skeleton {
+  background: #e0e0e0;
+  height: 20px;
+  margin: 5px 0;
+}
+
+.container {
+  min-height: 85vh; /* Asegura que el contenedor ocupe al menos toda la altura de la ventana */
+ 
+}
+
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.comentario-input {
+  width: 150px; /* O cualquier tamaño que necesites */
+}
+.custom-background {
+  background: rgba(204, 218, 209, 0.1); /* Fondo azul suave */
+  /* También puedes usar un gradiente o un color más suave */
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.5));
+}
+
+.logo-img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain; /* Hace que la imagen mantenga sus proporciones y la transparencia */
+  background-color: transparent; /* Asegura que el fondo sea transparente */
+}
 
 
+.d-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h3 {
+  padding: 1rem;
+  text-align: center;
+}
+.ajuste-item {
+  margin-bottom: 8px; /* Espacio entre cada ítem */
+  font-size: 14px; /* Tamaño de fuente ajustado */
+  color: #000000; /* Color de texto */
+  line-height: 1.5; /* Separación entre líneas */
+}
+
+.container2 {
+  min-height: 85vh; /* Asegura que el contenedor ocupe al menos toda la altura de la ventana */
+  margin-bottom: 50px;
+ 
+  margin-left: 50px;
+  margin-right: 50px;
+
+ 
+}
 
 ;

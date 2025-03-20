@@ -5,6 +5,9 @@ import { format } from 'date-fns'; // Importa la función format de date-fns
 
 const ExportView2 = ({ ordenPedido }) => {
 
+  // Mapa para convertir los códigos de sucursal del Excel a los códigos de la API
+ 
+
   const exportToExcel = () => {
     if (!ordenPedido) {
       console.error('No hay datos para exportar.');
@@ -12,7 +15,7 @@ const ExportView2 = ({ ordenPedido }) => {
     }
 
     const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-    const fileName = `OrdenPedido2_${ordenPedido.numero_ped}.xlsx`;
+    const fileName = `OrdenPedido_txt1_${ordenPedido.numero_ped}.xlsx`;
 
     // Filas fijas proporcionadas
     const ws_data = [
@@ -24,14 +27,11 @@ const ExportView2 = ({ ordenPedido }) => {
     const formatDate = (date) => {
       return format(date, 'yyyyMMdd');
     };
+
     const tipo = (ordenPedido) => {
-      if (ordenPedido.tipo === 'P') {
-        return 'Normal'; 
-      }
-      if (ordenPedido.tipo === 'N') {
-        return 'Navidad';
-    }
+      return ordenPedido.tipo === 'P' ? 'Normal' : 'Navidad';
     };
+
     const comentario = (ordenPedido) => {
       switch (ordenPedido.descripcion) {
         case '1':
@@ -41,11 +41,11 @@ const ExportView2 = ({ ordenPedido }) => {
         case '3':
           return 'Ventas de Clientes Especiales';
         default:
-          return 'Descripción no disponible'; // Valor por defecto para casos no esperados
+          return 'Descripción no disponible';
       }
     };
+
     // Agregar los datos debajo de las filas fijas
- 
     ws_data.push([
       ordenPedido.numero_ped, // DocNum
       'dDocument_Items', // DocType
@@ -56,13 +56,13 @@ const ExportView2 = ({ ordenPedido }) => {
       ordenPedido.user.sucursale.cliente, // CardCode (Cliente)
       '', // CardName
       '', // Address
-      'CH2401024', // NumAtCard
+      `REPWEB ${ordenPedido.user.sucursale.codigo} ${comentario(ordenPedido)}`, // NumAtCard
       'BsS', // DocCurrency
       '', // DocRate
       '', // DocTotal
       '', // Reference1
       '', // Reference2
-      comentario(ordenPedido), // Comments
+      `REPWEB ${ordenPedido.user.sucursale.codigo} ${comentario(ordenPedido)}`, // Comments
       '', // JournalMemo
       '', // PaymentGroupCode
       '', // DocTime
@@ -123,7 +123,7 @@ const ExportView2 = ({ ordenPedido }) => {
       '', // PayToBankCode
       '', // PayToBankAccountNo
       '', // PayToBankBranch
-      ordenPedido.user.sucursale.numero_id, // BPL_IDAssignedToInvoice (Número de sucursal)
+      '1', // BPL_IDAssignedToInvoice
       '', // DownPayment
       '', // ReserveInvoice
       '', // LanguageCode
@@ -150,7 +150,6 @@ const ExportView2 = ({ ordenPedido }) => {
       '', // InsuranceOperation347
       ''  // ArchiveNonremovableSalesQuotation
     ]);
- 
 
     // Crear una nueva hoja de cálculo
     const ws = XLSX.utils.aoa_to_sheet(ws_data);
@@ -171,7 +170,7 @@ const ExportView2 = ({ ordenPedido }) => {
 
   return (
     <button className="btn btn-success mx-2" onClick={exportToExcel}>
-       <i class='bx bxs-file-txt bx-md'></i> 2
+      <i className='bx bxs-file-txt bx-md'></i> 1
     </button>
   );
 };

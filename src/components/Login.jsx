@@ -11,11 +11,11 @@ import { carritoContext } from '../contexts/carritoContext';
 
 const Login = ({show, handleClose}) => {
 
-  const {setValidado, setDatosUsuario, datosUsuario } = useContext(carritoContext)
+  const {setValidado, setDatosUsuario, datosUsuario, apiBaseUrl } = useContext(carritoContext)
   const [usuario, setUsuario] = useState('');
   const [contrasenia, setContrasenia] = useState('')
   const [datosCorrectos, setDatosCorrectos] = useState(false);
-
+  
 
   
   function handleUsuario(event) {
@@ -30,15 +30,22 @@ const Login = ({show, handleClose}) => {
   function enviarDatos(event) {
     event.preventDefault();
   
-    fetch('http://192.168.0.107/ped2/users/login.json', {
+    fetch(`${apiBaseUrl}/usuarios/login.json`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         username: usuario,
         password: contrasenia,
       })
     })
-    .then(res => res.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
     .then(data => {
       if (data.message === 'Login successful') {
         if (data.user.status == 1) {
@@ -67,10 +74,19 @@ const Login = ({show, handleClose}) => {
           text: "Los datos ingresados no son correctos. Por favor, verifique.",
         });
       }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Hubo un problema con la solicitud. Por favor, inténtelo de nuevo más tarde.",
+      });
     });
   
     handleClose();
   }
+  
   
 
 const nav = {
@@ -82,35 +98,46 @@ const nav = {
 
   return (
     
-    <Modal show={show} onHide={handleClose} style={{marginTop: '01%'}} size="sm" centered dialogClassName="modal-50w" className='text-white' >
+    <Modal show={show} onHide={handleClose} style={{ marginTop: '1%' }} size="sm" centered dialogClassName="modal-50w" className='text-white'>
     <Form onSubmit={enviarDatos} style={nav}>
-      <Modal.Header closeButton >
-       
+      <Modal.Header closeButton>
+        <Modal.Title className='text-center'>Inicio de Sesión</Modal.Title>
       </Modal.Header>
-      <Modal.Title className='text-center'>Inicio de Sesión </Modal.Title>
       <Modal.Body>
-        <Form.Group className="mb-3 " controlId="formBasicEmail">
-        <Form.Label >Usuario</Form.Label>
-          <div className="input-group flex-nowrap" >
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label>Usuario</Form.Label>
+          <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping"><i className='bx bx-user'></i></span>
-            <input autoComplete="on" type="text" onChange={handleUsuario}  className="form-control" placeholder="Ingresar usuario" aria-label="Username" aria-describedby="addon-wrapping" />
+            <Form.Control
+              autoComplete="on"
+              value={usuario}
+              onChange={(e) => setUsuario(e.target.value)}
+              placeholder="Ingresar usuario"
+              aria-label="Username"
+              aria-describedby="addon-wrapping"
+            />
           </div>
-
         </Form.Group>
-        <Form.Group className="mb-3 " controlId="formBasicEmail" >
-        <Form.Label >Contraseña</Form.Label>
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Contraseña</Form.Label>
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping"><i className='bx bxs-key'></i></span>
-            <input type="password" onChange={handleContrasenia}  className="form-control" placeholder="Ingresar contraseña" aria-label="Username" aria-describedby="addon-wrapping" />
+            <Form.Control
+              type="password"
+              value={contrasenia}
+              onChange={(e) => setContrasenia(e.target.value)}
+              placeholder="Ingresar contraseña"
+              aria-label="Password"
+              aria-describedby="addon-wrapping"
+            />
           </div>
         </Form.Group>
-  
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="success"  type='submit'>
+        <Button variant="success" type='submit'>
           Enviar
         </Button>
-        <Button variant="danger" onClick={handleClose} type='submit'>
+        <Button variant="danger" onClick={handleClose}>
           Cerrar
         </Button>
       </Modal.Footer>

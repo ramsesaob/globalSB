@@ -7,7 +7,10 @@ const Carrito = ({children}) => {
     const [datosUsuario, setDatosUsuario] = useState([]);
      //const [cart, setCart] = useState([]);
     const [cart, setCart] = useState(JSON.parse(localStorage.getItem("cart")) || []);
-
+   const apiBaseUrl = 'http://192.168.0.195/apick';
+  // const apiBaseUrl = 'https://globalbusiness.ddns.net:12443/apick';
+    //const apiBaseUrl = 'https://globalbusiness.ddns.net:12443/api_local';
+   // const apiBaseUrl = 'http://192.168.0.195/api_local';
     useEffect(() => {
       // Guardar el estado cart en el localStorage
       localStorage.setItem("cart", JSON.stringify(cart));
@@ -38,6 +41,7 @@ const Carrito = ({children}) => {
        //console.log("agregado")
        //console.log(cart)
     }
+
     const vaciar = () =>{
       const confirmarEliminar = window.confirm("¿Estás seguro de que deseas vaciar  carrito?");
       
@@ -45,6 +49,7 @@ const Carrito = ({children}) => {
         setCart([])
       }
     }
+
     const eliminar = (id) => {
       const confirmarEliminar = window.confirm("¿Estás seguro de que deseas eliminar este elemento del carrito?");
       
@@ -84,9 +89,10 @@ const Carrito = ({children}) => {
       setValidado(false)
       setDatosUsuario(null)
     }
+
   return (
     <carritoContext.Provider 
-        value={{cart, agregar,  vaciar, eliminar, comprar, validado, setValidado, datosUsuario, setDatosUsuario, salir}}>
+        value={{cart, agregar,  vaciar, eliminar, comprar, validado, setValidado, datosUsuario, setDatosUsuario, salir, apiBaseUrl}}>
         {children}
     </carritoContext.Provider>
   )

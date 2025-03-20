@@ -1,24 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Swal from 'sweetalert2';
 import logo2 from '../assets/logo2.png';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useContext } from "react";
+import { useNavigate } from 'react-router-dom';
 import { carritoContext } from "../contexts/carritoContext";
-
+import ItemsFormulario from '../components/(formulario)/ItemsFormulario';
+import { Button } from 'react-bootstrap';
 
 const Formulario = () => {
-  const location = useLocation();
-  const { datosUsuario } = useContext(carritoContext);
+  const { datosUsuario, apiBaseUrl } = useContext(carritoContext);
   const [productos, setProductos] = useState(() => {
-  const savedProducts = localStorage.getItem('productos');
+    const savedProducts = localStorage.getItem('productos');
     return savedProducts ? JSON.parse(savedProducts) : [];
   });
   const [errorDescripcion, setErrorDescripcion] = useState('');
   const [fechaCreacion, setFechaCreacion] = useState('');
   const [motivoSeleccionado, setMotivoSeleccionado] = useState('');
-  const Api = 'http://192.168.0.107/ped2/OrdenPedidos/numped.json';
   const [datos, setDatos] = useState([]);
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+  const [numeroPedido, setNumeroPedido] = useState(1);
+  const handleShow = () => setShowModal(true);
+  const handleClose = () => setShowModal(false);
+  const [comentario, setComentario] = useState('');
+
 
   useEffect(() => {
     const today = new Date();
@@ -35,7 +39,6 @@ const Formulario = () => {
     localStorage.setItem('productos', JSON.stringify(productos));
   }, [productos]);
 
- 
   const handleSearchSerial = async (index) => {
     try {
       const serial = productos[index].serial;
@@ -45,15 +48,14 @@ const Formulario = () => {
         const updatedProductos = [...prevProductos];
         updatedProductos[index] = {
           ...updatedProductos[index],
-          descripcion: descripcion,
-          id: id,
-          empaque: empaque,
+          descripcion,
+          id,
+          empaque,
         };
         return updatedProductos;
       });
 
       setErrorDescripcion('');
-
     } catch (error) {
       console.error("Error al buscar la descripción del producto:", error);
       setErrorDescripcion('Descripción no encontrada');
@@ -62,20 +64,17 @@ const Formulario = () => {
 
   const buscarDescripcion = async (serial) => {
     try {
-      const response = await fetch(`http://192.168.0.107/ped2/articulos/serial.json?codigos=${serial}`);
-      const data = await response.json();
-
-      if (!data || !data.articulos || data.articulos.length === 0) {
+      const response = await fetch(`${apiBaseUrl}/art/serial.json?codigo=${serial}`);
+      if (!response.ok) {
         throw new Error("Descripción no encontrada");
       }
-
-      const primerArticulo = data.articulos[0];
+      const data = await response.json();
+      const articulo = data.articulos;
       return {
-        id: primerArticulo.id,
-        descripcion: primerArticulo.descripcion,
-        empaque: primerArticulo.empaque,
+        id: articulo.id,
+        descripcion: articulo.descripcion,
+        empaque: articulo.empaque,
       };
-
     } catch (error) {
       console.error("Error al buscar la descripción del producto:", error);
       throw error;
@@ -85,39 +84,11 @@ const Formulario = () => {
   const handleProductChange = (index, event, field) => {
     const updatedProducts = [...productos];
     let value = event.target.value;
-  
-    // Validar que no se ingresen puntos en lugar de comas
-    if (value.includes('.')) {
-      value = value.replace('.', ',');
-    }
-  
-    // Reemplazar comas por puntos para uniformidad
-    value = value.replace(',', '.');
-  
-    // Permitir que el usuario siga escribiendo decimales después de la coma
+
+    value = value.replace('.', ',').replace(',', '.');
+
     updatedProducts[index][field] = value;
-  
     setProductos(updatedProducts);
-  };
-  
- 
-  const agregarProducto = () => {
-    const nuevoProducto = { serial: '', descripcion: '', cantidad: '' };
-    setProductos([...productos, nuevoProducto]);
-  };
-
-  const eliminarProducto = (index) => {
-    const updatedProducts = productos.filter((_, i) => i !== index);
-    setProductos(updatedProducts);
-  };
-
-  const getNextNumeroPed = () => {
-    if (datos.length > 0) {
-      const maxNumeroPed = Math.max(...datos.map(item => parseInt(item.numero_ped)));
-      return maxNumeroPed + 1;
-    } else {
-      return 1;
-    }
   };
 
   const handleMotivoChange = (e) => {
@@ -126,14 +97,13 @@ const Formulario = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
-    // Validar la cantidad mínima (empaque) y múltiplo del empaque
+
     const isValid = productos.every(producto => {
       if (!producto.cantidad || parseFloat(producto.cantidad) < parseFloat(producto.empaque)) {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: `La cantidad mínima para "${producto.descripcion}" es ${parseFloat(producto.empaque).toFixed(2)}`, 
+          text: `La cantidad mínima para "${producto.descripcion}" es ${parseFloat(producto.empaque).toFixed(2)}`,
         });
         return false;
       } else if (parseFloat(producto.cantidad) % parseFloat(producto.empaque) !== 0) {
@@ -146,70 +116,100 @@ const Formulario = () => {
       }
       return true;
     });
-  
+
     if (!isValid) {
       return;
     }
-  
+
     Swal.fire({
       title: "¿Desea guardar los cambios?",
       showDenyButton: true,
-     
       confirmButtonText: "Guardar",
       denyButtonText: "Cancelar"
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch('http://192.168.0.107/ped2/OrdenPedidos/add.json', {
+          const payload = {
+            user_id: datosUsuario.user.id,
+            numero_ped: numeroPedido,
+            descripcion: motivoSeleccionado,
+            comentario: comentario, // Aquí agregamos el comentario
+            anulada: 1,
+            tipo: 'P',
+            Status_aprobada: 'Pendiente',
+            orden_items: productos.map(producto => ({
+              articulo_cod: producto.serial,
+              cantidad: producto.cantidad,
+              validado: '0',
+            }))
+          };
+          
+
+          console.log('Payload a enviar:', payload);
+          const response = await fetch(`${apiBaseUrl}/ordenp/guardar.json`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-              user_id: datosUsuario.user.id,
-              numero_ped: getNextNumeroPed(),
-              descripcion: motivoSeleccionado,
-              anulada: 1,
-              tipo: 'P',
-              Status_aprobada: 'Pendiente', // Pendiente,
-              productos: productos.map(producto => ({
-                articulo_id: producto.id,
-                cantidad: producto.cantidad,
-                comentario: producto.comentario,
-                validado: '0',
-              }))
-            }),
+            body: JSON.stringify(payload),
           });
-  
-          if (response.ok) {
-            console.log('Datos enviados correctamente');
-            setProductos([]);
-            localStorage.removeItem('productos'); // Limpiar productos guardados
-            navigate('/IndexPage');
-          } else {
-            console.error('Error al enviar los datos');
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Error al enviar los datos');
           }
+
+          const responseData = await response.json();
+          console.log('Datos enviados correctamente', responseData);
+
+          setProductos([]);
+          localStorage.removeItem('productos');
+          navigate('/IndexPage');
         } catch (error) {
           console.error('Error al enviar la solicitud:', error);
         }
       }
     });
   };
-  
 
   const getDatos = async () => {
     try {
-      const response = await fetch(`${Api}`);
+      const response = await fetch(`${apiBaseUrl}/ordenp/numped.json`);
+      if (!response.ok) {
+        throw new Error('Error al obtener los datos');
+      }
       const data = await response.json();
-      setDatos(data.orden);
+      setDatos(data.orden || []);
     } catch (error) {
-      console.error(error);
+      console.error('Error al obtener los datos:', error);
+    }
+  };
+
+  const updateNumeroPedido = () => {
+    if (datos.length > 0) {
+      const maxNumeroPed = Math.max(...datos.map(item => parseInt(item.numero_ped)));
+      setNumeroPedido(maxNumeroPed + 1);
+    } else {
+      setNumeroPedido(1);
     }
   };
 
   useEffect(() => {
     getDatos();
-  }, [getNextNumeroPed]);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getDatos(); // Actualiza los datos cada 5 segundos
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    updateNumeroPedido(); // Actualiza el número de pedido cuando los datos cambian
+  }, [datos]);
+
 
   return (
     <form onSubmit={handleSubmit}>
@@ -217,64 +217,73 @@ const Formulario = () => {
         <div className='py-1 col-12'>
           <div className="d-flex justify-content-between">
             <div>
-              <img src={logo2} alt="garantia" width={50} className='rounded mx-1'/>
+              <img src={logo2} alt="logo" width={50} />
             </div>
             <div>
-              <h3 className="py-2 text-center">Solicitud de Reposición Estándar </h3>
+              <h3 className="py-2 text-center">Solicitud de Reposición Estándar</h3>
             </div>
             <div>
-              <img src={logo2} alt="garantia" width={50} />
+              <img src={logo2} alt="logo" width={50} />
             </div>
           </div>
           <div className='row'>
             <h6>(*) Datos Requeridos</h6>
-            <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6'>
-              <label htmlFor="staticEmail" className="col-form-label text-center fw-bolder">Solicitante:</label>
+            <div className='col-sm-12 col-md-4 col-lg-4 col-xl-4'>
+              <label htmlFor="solicitante" className="col-form-label text-center fw-bolder">Solicitante:</label>
               <input
-                style={{ "width": "300px" }}
+                id="solicitante"
+                style={{ width: "300px" }}
                 className="form-control mx-2"
                 type="text"
                 defaultValue={`${datosUsuario.user.nombre} `}
-                aria-label="Disabled input example"
                 disabled
                 readOnly
               />
             </div>
-            {datos && datos.map((articulo, index) => (
-              <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6' key={index}>
-                <label htmlFor="staticEmail" className=" col-form-label text-center fw-bolder">Nº de Solicitud:</label>
-                <input
-                  style={{ "width": "300px" }}
-                  className="form-control mx-2"
-                  type="text"
-                  value={parseInt(articulo.numero_ped) + 1} // Suma uno al valor de articulo.numero_ped
-                  placeholder="Ingrese Numero de Solicitud"
-                  disabled // Hacer el campo no editable
-                />
-              </div>
-            ))}
-          </div>
-          <div className='row '>
-            <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6'>
-              <label htmlFor="created" className="col-form-label text-center fw-bolder">Fecha de Solicitud:</label>
+            <div className='col-sm-12 col-md-4 col-lg-4 col-xl-4'>
+              <label htmlFor="numeroSolicitud" className="col-form-label text-center fw-bolder">Nº de Solicitud:</label>
               <input
-                style={{ "width": "300px" }}
+                id="numeroSolicitud"
+                style={{ width: "300px" }}
                 className="form-control mx-2"
                 type="text"
-                value={fechaCreacion}
-                readOnly // Hacer el campo no editable
+                value={numeroPedido}
                 disabled
               />
             </div>
-            <div className='col-sm-12 col-md-6 col-lg-6 col-xl-6'>
-              <label htmlFor="created" className="col-form-label text-center fw-bolder">Motivo de la Solicitud</label>
+            <div className='col-sm-12 col-md-4 col-lg-4 col-xl-4'>
+              <label htmlFor="sucursal" className="col-form-label fw-bolder">Comentario:</label>
+              <textarea 
+                  id="comentario" // Cambié el id para que sea más representativo
+                  style={{ width: "300px" }}
+                  className="form-control mx-2"
+                  value={comentario}
+                  onChange={(e) => setComentario(e.target.value)} // Actualiza el estado al escribir
+                />
+
+              </div>
+          </div>
+          <div className='row'>
+            <div className='col-sm-12 col-md-4 col-lg-4 col-xl-4'>
+              <label htmlFor="fechaSolicitud" className="col-form-label text-center fw-bolder">Fecha de Solicitud:</label>
+              <input
+                id="fechaSolicitud"
+                style={{ width: "300px" }}
+                className="form-control mx-2"
+                type="text"
+                value={fechaCreacion}
+                readOnly
+              />
+            </div>
+            <div className='col-sm-12 col-md-4 col-lg-4 col-xl-4'>
+              <label htmlFor="motivo" className="col-form-label text-center fw-bolder">Motivo de la Solicitud</label>
               <select
+                id="motivo"
                 className="form-select"
-                aria-label="Default select example"
-                style={{ "width": "300px" }}
+                style={{ width: "300px" }}
                 value={motivoSeleccionado}
                 onChange={handleMotivoChange}
-                required // Hacer el campo obligatorio
+                required
               >
                 <option value="">(Seleccione)</option>
                 <option value="1">Alta Rotación</option>
@@ -282,70 +291,33 @@ const Formulario = () => {
                 <option value="3">Ventas de Clientes Especiales</option>
               </select>
             </div>
+           
           </div>
           <div className='row py-2'>
             <div className='col-12'>
-              <h5 className='text-start py-1  text-center'>Agregue los Productos de la Orden</h5>
-              <p className=' py-1'>"Si al buscar el serial los datos no coinciden, puede agregar los datos manualmente"</p>
+              <h5 className='text-start py-1 text-center'>Agregue los Productos de la Orden</h5>
+              <p className='py-1'>Si al buscar el serial los datos no coinciden, puede agregar los datos manualmente.</p>
+              <Button variant="success" onClick={handleShow}>
+                Agregar Productos
+              </Button>
+              <ItemsFormulario 
+                show={showModal} 
+                handleClose={handleClose} 
+                setProductos={setProductos} 
+                productos={productos} 
+                errorDescripcion={errorDescripcion}
+                datos={datos}
+                numeroPedido={numeroPedido}
+              />
             </div>
-            <div >
-              <button type="button" className="btn btn-success" onClick={agregarProducto}>Agregar Producto</button>
-              <button type="button" className="btn btn-danger mx-1" onClick={() => eliminarProducto(productos.length - 1)}>Quitar Producto</button>
-            </div>
-            {productos.map((producto, index) => (
-              <div key={index} className='row py-1 bor'>
-                <div className='col-sm-12 col-md-4 col-lg-4 col-xl-4'>
-                  <label htmlFor="serial" className="col-sm-6 col-form-label text-center fw-bolder">(*) BUSCAR SERIAL:</label>
-                  <div className="d-flex justify-content-end" role="search">
-                    <input
-                      type="search"
-                      className="form-control"
-                      placeholder="Ejemplo: 123456789"
-                      value={producto.serial}
-                      onChange={(e) => handleProductChange(index, e, 'serial')}
-                    />
-                    <button type="button" className="btn btn-success" onClick={() => handleSearchSerial(index)}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-                        <path fill="currentColor" fillRule="evenodd" d="m16.325 14.899l5.38 5.38a1.008 1.008 0 0 1-1.427 1.426l-5.38-5.38a8 8 0 1 1 1.426-1.426M10 16a6 6 0 1 0 0-12a6 6 0 0 0 0 12"/>
-                      </svg>
-                    </button>
-                  </div>
-                  {errorDescripcion && (
-                    <p className="text-danger">{errorDescripcion}</p>
-                  )}
-                  
-                </div>
-                <div className='col-sm-12 col-md-5 col-lg-5 col-xl-5'>
-                  <label htmlFor="descripcion" className="col-form-label text-center fw-bolder">(*) DESCRIPCION DEL PRODUCTO:</label>
-                  <input
-                    type="search"
-                    className="form-control"
-                    placeholder="Ejemplo: Cortina"
-                    value={producto.descripcion ? producto.descripcion : ''}
-                    onChange={(e) => handleProductChange(index, e, 'descripcion')}
-                  />
-                </div>
-                <div className='col-sm-12 col-md-2 col-lg-2 col-xl-2'>
-                  <label htmlFor="cantidad" className="col-form-label text-center fw-bolder">(*) Cantidad:</label>
-                  <input
-                    className="form-control form-control-md"
-                    type="text"
-                    placeholder="Unds"
-                    value={producto.cantidad}
-                    onChange={(e) => handleProductChange(index, e, 'cantidad')}
-                  />
-                  {producto.empaque && (
-                    <p className="text-muted">Cantidad mínima: {parseFloat(producto.empaque).toLocaleString(undefined, { maximumFractionDigits: 2 })}</p>
-                  )}
-
-                </div>
-              </div>
-            ))}
           </div>
           <div className='text-center py-3'>
-            <p className='fw-bolder text-danger'>Cantidad de Artículos Agregados en la Orden: "{productos.length}"</p>
-            <input className="btn btn-primary text-center" type="submit" value="ENVIAR" />
-            
+            <h5 className='fw-bolder text-black py-3'>Cantidad de Artículos Agregados en la Orden: "{productos.length}"</h5>
+            {productos.length > 0 ? (
+              <input className="btn btn-primary" type="submit" value="ENVIAR" />
+            ) : (
+              <input className="btn btn-disabled" type="submit" value="ENVIAR" disabled />
+            )}
           </div>
         </div>
       </div>

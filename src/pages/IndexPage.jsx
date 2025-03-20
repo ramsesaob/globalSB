@@ -10,10 +10,10 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Button } from 'primereact/button';
 import { locale, addLocale } from 'primereact/api';
 import { es } from '../../node_modules/primelocale/es.json'; // Importar archivo JSON directamente
-
+import  ReporteModal  from '../components/ReporteModal';
 
 const IndexPage = () => {
-  const { datosUsuario } = useContext(carritoContext);
+  const { datosUsuario, apiBaseUrl } = useContext(carritoContext);
   const [ordenPedidos, setOrdenPedidos] = useState([]);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [tableKey, setTableKey] = useState(0); // Key para forzar la actualización del DataTable
@@ -23,9 +23,21 @@ const IndexPage = () => {
     'sucursal': { value: null, matchMode: 'contains' }, 
     'numero_ped': { value: null, matchMode: 'contains' }, 
     'created': { value: null, matchMode: 'contains' }, 
-    'Status_aprobada': { value: null, matchMode: 'contains' }, 
+    'Status_aprobada': { value: null, matchMode: 'contains' },
+    'descripcion': { value: null, matchMode: 'contains' },  
   });
   const [showFilters, setShowFilters] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [statusCounts, setStatusCounts] = useState({
+    total: 0,
+    pending: 0,
+    partially: 0,
+    processed: 0,
+    canceled: 0,
+  });
+  const [showReportModal, setShowReportModal] = useState(false);
+  const handleShowReportModal = () => setShowReportModal(true);
+  const handleCloseReportModal = () => setShowReportModal(false);
   
 // Configuración de idioma español en el DataTable
   useEffect(() => {
@@ -36,33 +48,65 @@ const IndexPage = () => {
 
   useEffect(() => {  
     const fetchAndFilterOrdenPedidos = async () => {  
+     
       try {  
-        const response = await axios.get(`http://192.168.0.107/ped2/OrdenPedidos/page.json`);  
+        const response = await axios.get(`${apiBaseUrl}/ordenp/page.json`);  
         const ordenPedidos = response.data.orden;
+     
+     
 
-        const role = datosUsuario.user.role;  
-        const filteredPedidos = ordenPedidos.filter(orden => {  
-          if (role == 'admin') {  
-            return true;  
-          } else if (role == 'user1') {  
-            return orden.user_id == datosUsuario.user.id;  
-          } else if (role == 'user2') {  
-            return true;  
-          } else {  
-            return orden.user_id == datosUsuario.user.id;  
-          }  
-        });  
+        const role = datosUsuario.user.role;
+  
+        const sucursal = datosUsuario.user.sucursale?.descripcion || '';
+
+      
+      let filteredPedidos = []; // Crear la variable fuera del filtro para ir agregando resultados
+  
+      // Filtrado por roles de usuario antes de aplicar otros filtros
+      if (role == 'admin') {
+        filteredPedidos = ordenPedidos; // El admin ve todas las órdenes
+      } else if (role == 'user1') {
+        filteredPedidos = ordenPedidos.filter(orden => orden.user_id == datosUsuario.user.id); // 'user1' solo ve sus propias órdenes
+      } else if (role === 'user2') {
+        filteredPedidos = ordenPedidos; // 'user2' ve todas las órdenes
+      } else if (role == 'user3') {
+        filteredPedidos = ordenPedidos.filter(orden => orden.user_id == datosUsuario.user.id); // 'user3' también solo ve sus órdenes
+      } else if (role == 'gerente') {
+        // Filtrar las órdenes por la sucursal del gerente
+        filteredPedidos = ordenPedidos.filter(orden => orden.sucursal == sucursal);  // Filtrar por descripción de la sucursal
+      } else {
+        filteredPedidos = ordenPedidos.filter(orden => orden.user_id == datosUsuario.user.id); // Por defecto, solo ve sus propias órdenes
+      }
+  
   
         setOrdenPedidos(ordenPedidos);  
         setFilteredOrdenPedidos(filteredPedidos);  
      
-      } catch (error) {  
-        console.error('Error fetching data:', error);  
-      }  
-    };  
+     
+      // Calcular los conteos de estado
+      const counts = {
+        total: role === 'admin' || role === 'user2' ? ordenPedidos.length : filteredPedidos.length,
+        pending: (role === 'admin' || role === 'user2' ? ordenPedidos : filteredPedidos)
+          .filter(o => o.Status_aprobada === 'Pendiente' && o.anulada != 0).length, // Solo cuenta si no está anulada
+        partially: (role === 'admin' || role === 'user2' ? ordenPedidos : filteredPedidos)
+          .filter(o => o.Status_aprobada === 'Parcialmente' && o.anulada != 0).length, // Solo cuenta si no está anulada
+        processed: (role === 'admin' || role === 'user2' ? ordenPedidos : filteredPedidos)
+          .filter(o => o.Status_aprobada === 'Procesada' && o.anulada != 0).length, // Solo cuenta si no está anulada
+        canceled: (role === 'admin' || role === 'user2' ? ordenPedidos : filteredPedidos)
+          .filter(o => o.anulada == 0).length, // Cuenta solo las órdenes anuladas
+      };
+      setStatusCounts(counts);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   
     fetchAndFilterOrdenPedidos();  
-  }, [datosUsuario]); 
+  }, [datosUsuario, tableKey, filters, ordenPedidos]); 
+
+
 
   const handleAnularPedido = async (id) => {
     Swal.fire({
@@ -76,7 +120,7 @@ const IndexPage = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`http://192.168.0.107/ped2/OrdenPedidos/anular/${id}.json`, {
+          const response = await fetch(`${apiBaseUrl}/ordenp/anular/${id}.json`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
@@ -138,6 +182,18 @@ const IndexPage = () => {
       return 'Navidad';
   }
   };
+ 
+  const motivoTemplate = (rowData) => {
+      if (rowData.descripcion === '1') {
+        return 'Alta Rotación'; 
+      }
+      if (rowData.descripcion === '2') {
+        return 'Ventas al por mayor';
+    }
+    if (rowData.descripcion === '3') {
+      return 'Ventas de Clientes E';
+    }
+  };
 
   const rowClassName = (rowData) => {
     return parseInt(rowData.anulada) == 0 ? 'table-anulada' : ''; // Aplica clase 'table-anulada' si anulada es 0
@@ -165,14 +221,46 @@ const IndexPage = () => {
   };
 
   const formatDate = (rowData) => {
-    const createdDate = new Date(rowData.created);
+    const dateString = rowData.created.split('.')[0]; // '2024-10-22 15:41:48'
+    const createdDate = new Date(dateString + 'Z'); // Añadir 'Z' para tratarlo como UTC
+  
+    if (isNaN(createdDate.getTime())) {
+      console.error('Fecha no válida:', dateString);
+      return 'Fecha no válida';
+    }
+  
+    // Obtener los componentes de la fecha y hora
     const year = createdDate.getFullYear();
     const month = String(createdDate.getMonth() + 1).padStart(2, '0'); // Los meses empiezan en 0
     const day = String(createdDate.getDate()).padStart(2, '0');
-    const hours = String(createdDate.getHours()).padStart(2, '0');
+    let hours = createdDate.getHours();
     const minutes = String(createdDate.getMinutes()).padStart(2, '0');
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
+    const ampm = hours >= 12 ? 'pm' : 'am'; // Determina si es AM o PM
+  
+    hours = hours % 12; // Convierte a formato 12 horas
+    hours = hours ? String(hours).padStart(2, '0') : '12'; // Asegura que la hora sea '12' en vez de '0'
+  
+    // Devuelve la fecha en el formato deseado
+    return `${year}-${month}-${day} ${hours}:${minutes} ${ampm}`;
   };
+  
+  
+  
+
+ /* const formatDate = (rowData) => {
+    const dateString = rowData.created.split('.')[0]; // '2024-10-22 15:41:48'
+    const createdDate = new Date(dateString + 'Z'); // Añadir 'Z' para indicar UTC
+  
+    const year = createdDate.getFullYear();
+    const month = String(createdDate.getMonth() + 1).padStart(2, '0'); // Los meses empiezan en 0
+    const day = String(createdDate.getDate()).padStart(2, '0');
+    const hours = String(createdDate.getUTCHours()).padStart(2, '0'); // Usa getUTCHours para la hora UTC
+    const minutes = String(createdDate.getUTCMinutes()).padStart(2, '0'); // Usa getUTCMinutes para los minutos
+    const seconds = String(createdDate.getUTCSeconds()).padStart(2, '0'); // Usa getUTCSeconds para los segundos
+  
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  };
+  */
 
   const handleFilterChange = (e) => {
     setFilters(e.filters);  // Actualiza el estado de los filtros
@@ -183,51 +271,159 @@ const IndexPage = () => {
   const toggleFilters = () => {
     setShowFilters(!showFilters);
   };
-  
+  if (!ordenPedidos) {
+    return <div className="text-center">Loading...</div>; // Muestra un mensaje de carga mientras se obtienen los datos
+  }
+
+  const commonBodyStyle = {
+    textAlign: 'center',
+    fontSize: '0.8rem',
+    padding: '1px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'normal', // Permite múltiples líneas
+    maxHeight: '3em', // Limita la altura para dos líneas
+  };
 
   return (
     <div className="container">
-      <h2 className='text-center p-1'>Ordenes de Pedidos</h2>
-
-      <div className='d-flex justify-content-between' >
-          <SearchTable />
-          <Button
-            label={showFilters ? 'Ocultar Filtros' : 'Mostrar Filtros'} 
-            icon="pi pi-filter" 
-            className=" p-filter-toggle-button btn btn-info btn-sm " 
-            onClick={toggleFilters}
-            style={{ height: "40px", lineHeight: "30px" }} /* Ajusta la altura aquí */
-          />
-       </div>
-    <div className={`p-datatable ${showFilters ? 'filters-visible' : ''}`} >
-      <DataTable
-        key={tableKey}
-        value={filteredOrdenPedidos}
-        paginator
-        resizableColumns
-        rows={10}
-        rowsPerPageOptions={[5, 10, 25, 50]}
-        responsive
-        rowClassName={rowClassName}
-        globalFilter={globalFilterValue} // Aplicar filtro global
-        className='p-datatable-sm text-center' 
-        bodyClassName={rowClass}
-        filters={filters} 
-        filterDisplay="row" 
-        onFilter={handleFilterChange}
-      
-      >
-        <Column field="numero_ped" header="Numero de pedido" sortable headerStyle={headerStyle} bodyStyle={{ textAlign: 'center', fontSize: '0.8rem' }} filter filterPlaceholder="Buscar por pedido" />
-        <Column field="created" header="Fecha de pedido" sortable headerStyle={headerStyle} bodyStyle={{ textAlign: 'center', fontSize: '0.8rem' }} body={formatDate} filter filterPlaceholder="Buscar por Fecha" />
-        <Column field="sucursal" header="Sucursal" sortable headerStyle={headerStyle} bodyStyle={{ textAlign: 'center', fontSize: '0.8rem' }} filter filterPlaceholder="Buscar por Sucursal" />
-        <Column field="Status_aprobada" header="Status" sortable headerStyle={headerStyle} bodyStyle={{ textAlign: 'center', fontSize: '0.8rem' }} bodyClassName={rowClass} filter filterPlaceholder="Buscar por Status" />
-        <Column field="anulada" header="Activa" body={anuladaTemplate} sortable headerStyle={headerStyle} bodyStyle={{ textAlign: 'center', fontSize: '0.8rem' }} />
-        <Column field="tipo" header="Tipo" body={tipoTemplate} sortable headerStyle={headerStyle} bodyStyle={{ textAlign: 'center', fontSize: '0.8rem' }} />
-        <Column header="Acciones" body={actionTemplate} headerStyle={headerStyle} bodyStyle={{ textAlign: 'center', fontSize: '0.8rem' }} />
-      </DataTable>
+    <h2 className='text-center p-1'>Ordenes de  de Inventario</h2>
+    <div className='d-flex justify-content-between py-2'>
+      <Button
+        label={showFilters ? 'Ocultar Filtros' : 'Mostrar Filtros'}
+        icon="pi pi-filter"
+        className="p-filter-toggle-button btn btn-info btn-sm"
+        onClick={toggleFilters}
+        style={{ height: "40px", lineHeight: "30px" }}
+      />
+     
+          
+        <div className="status-counts">
+   
+      <ReporteModal
+        show={showReportModal} 
+        handleClose={handleCloseReportModal} 
+        statusCounts={statusCounts} 
+        filteredOrdenPedidos={filteredOrdenPedidos}
+        orders={ordenPedidos} 
+      />
+          <span className='text-black fs-5'><i class='bx bxs-grid-alt bx-spin' ></i>Total: {statusCounts.total}</span>
+          <span className='text-danger fs-5'> | <i className='bx bxs-message-alt-x bx-tada' ></i> Pendientes: {statusCounts.pending}</span>
+          <span className='text-info fs-5'> | <i className='bx bxs-message-alt-error bx-tada' ></i> Parcialmente: {statusCounts.partially}</span>
+          <span className='text-success fs-5'> | <i className='bx bxs-message-alt-check bx-tada' ></i> Procesadas: {statusCounts.processed}</span>
+          <span className='text-warning fs-5'> | <i className='bx bxs-error-circle bx-tada' ></i> Anuladas: {statusCounts.canceled}</span>
+          <Button className="btn btn-light btn-sm mx-2" variant="info" onClick={handleShowReportModal}><i className='bx bxs-report'></i>Reporte</Button>
+        </div>
+     
     </div>
-  </div>
+    {loading ? (
+        <div className="text-center my-5">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      ) : (
+    <div className={`p-datatable ${showFilters ? 'filters-visible' : ''}`} >
+    <DataTable
+      key={tableKey}
+      value={filteredOrdenPedidos}
+      paginator
+      resizableColumns
+      rows={20}
+      rowsPerPageOptions={[10, 20, 50, 100]}
+      responsive={true}
+      rowClassName={rowClassName}
+      globalFilter={globalFilterValue}
+      className='table-condensed p-datatable-sm text-center' 
+      bodyClassName={rowClass}
+      filters={filters} 
+      filterDisplay="row" 
+      onFilter={handleFilterChange}
+    >
+      <Column 
+        field="numero_ped" 
+        header="Nº Ped" 
+        sortable 
+        headerStyle={{ ...headerStyle, width: '120px' }} 
+        bodyStyle={commonBodyStyle} 
+        filter 
+        filterPlaceholder="Buscar por pedido" 
+      />
+      <Column 
+        field="created" 
+        header="Fecha de pedido" 
+        sortable 
+        headerStyle={{ ...headerStyle, width: '150px' }} 
+        bodyStyle={commonBodyStyle} 
+        body={formatDate} 
+        filter 
+        filterPlaceholder="Buscar por Fecha" 
+      />
+      <Column 
+        field="sucursal" 
+        header="Sucursal" 
+        sortable 
+        headerStyle={{ ...headerStyle, width: '100px' }} 
+        bodyStyle={commonBodyStyle} 
+        filter 
+        filterPlaceholder="Buscar por Sucursal" 
+      />
+      <Column 
+        field="descripcion" 
+        header="Motivo" 
+        sortable 
+        headerStyle={{ ...headerStyle, width: '150px' }} 
+        bodyStyle={commonBodyStyle} 
+        body={motivoTemplate} 
+        filter 
+        filterPlaceholder="Buscar por Motivo" 
+      />
+      <Column 
+        field="Status_aprobada" 
+        header="Status" 
+        sortable 
+        headerStyle={{ ...headerStyle, width: '100px' }} 
+        bodyStyle={commonBodyStyle} 
+        bodyClassName={rowClass} 
+        filter 
+        filterPlaceholder="Buscar por Status" 
+      />
+      <Column 
+        field="anulada" 
+        header="Activa" 
+        body={anuladaTemplate} 
+        sortable 
+        headerStyle={{ ...headerStyle, width: '80px' }} 
+        bodyStyle={commonBodyStyle} 
+      />
+      <Column 
+        field="tipo" 
+        header="Tipo" 
+        body={tipoTemplate} 
+        sortable 
+        headerStyle={{ ...headerStyle, width: '80px' }} 
+        bodyStyle={commonBodyStyle} 
+      />
+      <Column 
+        field="comentario" 
+        header="Comentario" 
+        sortable 
+        headerStyle={{ ...headerStyle, width: '200px' }} 
+        bodyStyle={commonBodyStyle} 
+        filter 
+        filterPlaceholder="Buscar por Comentario" 
+      />
+      <Column 
+        header="Acciones" 
+        body={actionTemplate} 
+        headerStyle={headerStyle} 
+        bodyStyle={{ textAlign: 'center', fontSize: '0.8rem' }} 
+      />
+    </DataTable>
+
+      </div>
+      )}
+    </div>
   );
 };
-
 export default IndexPage;

@@ -4,7 +4,7 @@ import Carrusel from '../components/Carrusel'
 
 const Inicio = () => {
   return (
-    <div>
+    <div className='my-3'>
        
         <Carrusel></Carrusel>
     </div>
