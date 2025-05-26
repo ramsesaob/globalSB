@@ -3,7 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
-
+import logo from '../assets/Logo Global Business_1900x580.png';
 // para el contexto
 import { useContext } from "react";
 import { carritoContext } from '../contexts/carritoContext';
@@ -101,7 +101,7 @@ const nav = {
     <Modal show={show} onHide={handleClose} style={{ marginTop: '1%' }} size="sm" centered dialogClassName="modal-50w" className='text-white'>
     <Form onSubmit={enviarDatos} style={nav}>
       <Modal.Header closeButton>
-        <Modal.Title className='text-center'>Inicio de Sesión</Modal.Title>
+        <Modal.Title className='text-center'>Inicio de Sesión   <img src={logo} alt="logo" width={120} className="rounded" /> </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form.Group className="mb-3" controlId="formBasicEmail">

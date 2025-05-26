@@ -500,6 +500,7 @@ const guardarDatos = async () => {
                 style={{ width: '100%' }}
                 value={insuficiencia.Observaciones || ''}  // Asegúrate de usar un valor vacío en lugar de undefined
                 onChange={(e) => handleInputChange(insuficiencia.Codigo, insuficiencia.Fecha, 'Observaciones', e.target.value)}
+                 maxLength={250} 
               />
             </td>
             <td>

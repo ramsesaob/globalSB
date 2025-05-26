@@ -18,6 +18,7 @@ const RepAsistencia = () => {
     // Cambiamos modalVisible a showModal
     const [showModal, setShowModal] = useState(false); // Nuevo estado para el modal
   
+ 
     // Estado para ordenación
     const [filters, setFilters] = useState({
       startDate: today1,

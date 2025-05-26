@@ -27,7 +27,7 @@ const IndexInsf = () => {
   const debouncedSearchDescripcion = useMemo(() => debounce(value => setSearchDescripcion(value), 100), []);
   const debouncedSearchComentario = useMemo(() => debounce(value => setSearchComentario(value), 100), []);
 
-
+  console.log(datosUsuario);
   const navigate = useNavigate();
   
   const fetchOrders = async () => {
@@ -165,20 +165,35 @@ const IndexInsf = () => {
     setLimit(Number(event.target.value));  
     setPage(1);  // Reiniciamos la página cuando cambiamos el límite
   };
-
-  const formatDate = (orden) => {
-    // Verificar si orden.created tiene un valor válido antes de continuar
-    if (!orden.created) {
-      console.error('Fecha no válida:', orden.created);
-      return 'Fecha no válida'; // Devuelve un valor por defecto si la fecha no es válida
+  const formatDate = (fecha) => {
+    // Verificar si la fecha es null o undefined
+    if (!fecha) {
+      console.error('Fecha no válida:', fecha);
+      return 'N/A'; // Devuelve 'N/A' si la fecha es null o undefined
     }
   
-    const dateString = orden.created.split('.')[0]; // '2024-10-22 15:41:48'
-    const createdDate = new Date(dateString + 'Z'); // Añadir 'Z' para tratarlo como UTC
+    // Verificar si la fecha tiene un valor válido antes de continuar
+    if (typeof fecha !== 'string') {
+      console.error('Fecha no válida:', fecha);
+      return 'Fecha no válida'; // Devuelve 'Fecha no válida' si no es una cadena
+    }
   
-    if (isNaN(createdDate.getTime())) {
+    // Asegurarse de que la fecha esté en el formato esperado
+    const dateString = fecha.split('.')[0]; // '2024-10-22 15:41:48'
+    
+    // Verificar si la fecha tiene el formato correcto
+    if (!dateString || isNaN(new Date(dateString).getTime())) {
       console.error('Fecha no válida:', dateString);
-      return 'Fecha no válida'; // Devuelve un valor por defecto si la fecha es inválida
+      return 'Fecha no válida'; // Devuelve 'Fecha no válida' si no es un formato de fecha válido
+    }
+  
+    // Crear el objeto Date (asumimos que la fecha está en UTC)
+    const createdDate = new Date(dateString + 'Z'); // Añadir 'Z' para tratarlo como UTC
+    
+    // Verificar si la creación de la fecha fue exitosa
+    if (isNaN(createdDate.getTime())) {
+      console.error('Fecha no válida (Date inválido):', dateString);
+      return 'Fecha no válida'; // Devuelve 'Fecha no válida' si el objeto Date es inválido
     }
   
     // Obtener los componentes de la fecha y hora
@@ -188,13 +203,14 @@ const IndexInsf = () => {
     let hours = createdDate.getHours();
     const minutes = String(createdDate.getMinutes()).padStart(2, '0');
     const ampm = hours >= 12 ? 'pm' : 'am'; // Determina si es AM o PM
-  
+    
     hours = hours % 12; // Convierte a formato 12 horas
     hours = hours ? String(hours).padStart(2, '0') : '12'; // Asegura que la hora sea '12' en vez de '0'
-  
+    
     // Devuelve la fecha en el formato deseado
     return `${year}-${month}-${day} ${hours}:${minutes} ${ampm}`;
   };
+  
   
   const clearFilters = () => {
     setSearchNsolicitud('');
@@ -386,6 +402,16 @@ const getSortedOrders = () => {
               <i className={`bx bx-sort${sortConfig.key === 'created' && sortConfig.direction === 'asc' ? '-down' : '-up'}`}></i>
               Fecha de Creación
             </th>
+            {(datosUsuario.user.role === 'admin' || datosUsuario.user.role === 'user2') && (
+
+              <th
+                onClick={() => handleSort('fecha_aprobacion_tienda')}
+                style={{ cursor: 'pointer' }}
+              >
+                <i className={`bx bx-sort${sortConfig.key === 'updated' && sortConfig.direction === 'asc' ? '-down' : '-up'}`}></i>
+                Fecha de Aprobación
+              </th>
+            )}
 
 
               <th
@@ -422,7 +448,16 @@ const getSortedOrders = () => {
           {getSortedOrders().map((orden) => (
            
               <tr key={orden.id} className={orden.status === 'Finalizada' ? 'table-success' : 'table-warning' && orden.status === 'Orden Creada' ? 'table-danger' : 'table-warning' && orden.status === 'Ajuste Confirmado' ? 'table-success' : 'table-warning'}>
-                <td>{formatDate(orden) || 'N/A'}</td>
+                <td>{formatDate(orden.created) || 'N/A'}</td>
+                <>
+                {(datosUsuario.user.role == 'admin' || datosUsuario.user.role == 'user2') && (
+                 <td>
+                  {orden.fecha_aprobacion_tienda ? formatDate(orden.fecha_aprobacion_tienda) : 'N/A'}
+                  
+                   
+                  </td>
+                  )}
+                </>
                 <td>{orden.nsolicitud || 'N/A'}</td>
                 <td>{orden.comentario || 'Sin comentario'}</td>
                 <td>{orden.descripcion || 'N/A'}</td>

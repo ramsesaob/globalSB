@@ -12,7 +12,7 @@ const ModalArtCod = ({ isOpen, onRequestClose }) => {
     const [articulos, setArticulos] = useState([]);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
-    const { apiBaseUrl } = useContext(carritoContext);
+    const { apiBaseUrl } = useContext(carritoContext); 
 
     useEffect(() => {
         const fetchSucursales = async () => {

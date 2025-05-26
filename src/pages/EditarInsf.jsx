@@ -344,7 +344,7 @@ const EditarInsf = ({ setInsuficiencias }) => {
                 <div key={ajuste.id} className="card p-2 mb-2" style={{ backgroundColor: '#7cbccd', border: '1px solid #ddd' }}>
                     <h4 className="text-warning fw-bold text-center">Ajuste #{ajusteIndex + 1}</h4>
                     <div className="row">
-                        <div className="col-md-4 mb-2">
+                        <div className="col-md-3 mb-2">
                             <label><strong>Código Ajustar:</strong></label>
                             <input
                                 type="text"
@@ -353,11 +353,8 @@ const EditarInsf = ({ setInsuficiencias }) => {
                                 value={ajuste.codigo_ajustar || ''}
                                 onChange={(e) => handleInputChange('codigo_ajustar', e.target.value, 'insuficiencia_ajuste', index, ajusteIndex)}
                             />
-                            
-
-
                         </div>
-                        <div className="col-md-4 mb-2">
+                            <div className="col-md-3 mb-2">
                             <label><strong>Desripcion:</strong></label>
                             <input
                                 type="text"
@@ -370,7 +367,38 @@ const EditarInsf = ({ setInsuficiencias }) => {
 
 
                         </div>
-                        <div className="col-md-4 mb-2">
+                        <div className="col-md-1 mb-2">
+                            <label><strong>stock_sistema:</strong></label>
+                            <input
+                                type="number"
+                                className="form-control form-control-sm"
+                                style={{ backgroundColor: '#eaf0f5' }}
+                                value={ajuste.stock_sistema || '0'}
+                                onChange={(e) => handleInputChange('stock_sistema', e.target.value, 'insuficiencia_ajuste', index, ajusteIndex)}
+                                min={0}
+                            />
+                            
+
+
+                        </div>
+                        <div className="col-md-1 mb-2">
+                            <label><strong>stock_fisico:</strong></label>
+                            <input
+                                type="number"
+                                className="form-control form-control-sm"
+                                style={{ backgroundColor: '#eaf0f5' }}
+                                value={ajuste.stock_fisico || '0'}
+                                onChange={(e) => handleInputChange('stock_fisico', e.target.value, 'insuficiencia_ajuste', index, ajusteIndex)}
+                                min={0}
+                            />
+                            
+
+
+                        </div>
+
+                        
+                       
+                        <div className="col-md-3 mb-2">
                             <label><strong>Observaciones:</strong></label>
                             <textarea
                                 type="text"

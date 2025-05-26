@@ -33,12 +33,22 @@ const ModalViewDatosInsfSap = ({ showModal, handleClose, solInsuficiencia, handl
  // console.log("usuario", datosUsuario.user.id);
 
   // Función para manejar la aprobación de items
+
   const handleApproveItems = async () => {
     // Asegurarse de que haya elementos seleccionados
     if (selectedItems.length === 0) {
-      alert("Por favor, seleccione al menos un item.");
+      Swal.fire({
+        icon: 'warning',
+        title: 'Selección de Items',
+        text: 'Por favor, seleccione al menos un item.',
+        confirmButtonText: 'Aceptar'
+      });
       return;
     }
+  
+   
+  
+    
   
     // Obtenemos la fecha actual
     const fechaActual = new Date().toISOString();
@@ -58,17 +68,33 @@ const ModalViewDatosInsfSap = ({ showModal, handleClose, solInsuficiencia, handl
   
       const data = await response.json();
       if (data.message === 'Items aprobados correctamente') {
-        Swal.fire('Guardado!', 'La solicitud se ha guardado correctamente.', 'success');
+        Swal.fire({
+          icon: 'success',
+          title: 'Guardado!',
+          text: 'La solicitud se ha guardado correctamente.',
+          confirmButtonText: 'Aceptar'
+        });
         handleClose();
         // Actualizar el estado local o realizar refetch si es necesario
       } else {
-        alert('Error al aprobar los items.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error al aprobar los items.',
+          confirmButtonText: 'Aceptar'
+        });
       }
     } catch (error) {
       console.error('Error al aprobar items:', error);
-      alert('Hubo un error al aprobar los items.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Hubo un error al aprobar los items.',
+        confirmButtonText: 'Aceptar'
+      });
     }
   };
+  
   
 
   if (!showModal || !solInsuficiencia) return null; // Aseguramos que haya datos para mostrar

@@ -55,22 +55,33 @@ align-content: center;
 /* Oculta los filtros por defecto */
 /* Ajustes opcionales para los filtros */
 /* styles.css */
+/* filtro
 .p-datatable.filters-visible .p-column-filter {
-display: block; /* Muestra cuando la clase filters-visible está presente */
-width: 100%; /* Asegura que el contenedor de los filtros ocupa todo el ancho disponible */
+display: block; /* Muestra cuando la clase filters-visible está presente 
+width: 100%; /* Asegura que el contenedor de los filtros ocupa todo el ancho disponible 
 }
-
-/* Asegura que el contenedor del filtro ocupa todo el ancho disponible */
+*/
+/* Asegura que el contenedor del filtro ocupa todo el ancho disponible 
 .p-datatable .p-column-filter {
-width: 100% !important; /* Usa !important para asegurarte de que este estilo se aplique */
-box-sizing: border-box; /* Incluye padding y border en el ancho total */
-display: none; /* Oculta por defecto */
+width: 100% !important; /* Usa !important para asegurarte de que este estilo se aplique 
+box-sizing: border-box; /* Incluye padding y border en el ancho total 
+display: none; /* Oculta por defecto 
 }
 
 /* Ajusta el ancho del elemento que contiene el input */
+/*
 .p-datatable .p-column-filter .p-fluid {
-width: 100% !important; /* Usa !important para asegurarte de que este estilo se aplique */
-box-sizing: border-box; /* Incluye padding y border en el ancho total */
+width: 100% !important; /* Usa !important para asegurarte de que este estilo se aplique 
+box-sizing: border-box; /* Incluye padding y border en el ancho total 
+}
+*/
+.row-duplicada {
+    background-color: #fff3cd !important; /* Color de fondo amarillo claro */
+    border: 2px solid #ffc107 !important; /* Borde amarillo */
+}
+
+.row-duplicada:hover {
+    background-color: #ffe69c !important; /* Color más oscuro al pasar el mouse */
 }
 
 /* Perfil.css */
@@ -174,5 +185,127 @@ h3 {
 
  
 }
+
+
+.filtros-trabajador-container, .table-container {
+  width: 100%;
+  box-sizing: border-box;
+}
+.filtros-trabajador-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  background-color: #edeaea;
+  padding: 16px;
+  gap: 10px;
+}
+
+.filtros-trabajador-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: auto;
+  box-sizing: border-box;
+}
+
+.filtros-info-extra {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; /* Alinea los párrafos al centro */
+  font-size: 0.9rem;
+  margin-top: 20px;
+}
+
+
+.filtros-trabajador-item {
+  width: auto;
+  padding: 5px, 20px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+
+.filtros-trabajador-card select:focus, .filtros-trabajador-card input:focus {
+  outline: none;
+  border-color: #198754;
+  box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+}
+
+.filtros-trabajador-card select option:hover {
+  background-color: rgba(25, 135, 84, 0.2);
+  color: #212529;
+}
+
+.filtros-trabajador-card select option:checked {
+  background-color: rgba(25, 135, 84, 0.4);
+  color: #fff;
+}
+
+.filtros-trabajador-card .btn {
+  width: auto; /* Los botones deben ajustarse al contenido */
+  margin-right: 10px;
+}
+
+.modal-trabajador {
+  background-color: #eeefef;
+}
+
+.modal-trabajador .form-control:focus {
+  outline: none;
+  border-color: #198754; /* Color de éxito de Bootstrap */
+  box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25); /* Sombra para el enfoque */
+}
+.modal-trabajador select:focus {
+  outline: none;
+  border-color: #198754; /* Color de éxito de Bootstrap */
+  box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25); /* Sombra para el enfoque */
+}
+.modal-trabajador select option:hover {
+  background-color: rgba(25, 135, 84, 0.2); /* Un tono verde más claro y transparente */
+  color: #212529; /* Opcional: Cambiar el color del texto si es necesario para contraste */
+}
+
+.modal-trabajador select option:checked {
+  background-color: rgba(25, 135, 84, 0.4); /* Un tono verde un poco más intenso y transparente para la selección */
+  color: #fff; /* Opcional: Cambiar el color del texto de la opción seleccionada */
+}
+
+.modal-trabajador .form-group-checkbox {
+  background-color: rgba(0, 0, 0, 0.1); /* Sombra más oscura para diferenciar */
+  padding: 1rem;
+  border-radius: 0.25rem;
+  margin-top: 1rem;
+}
+/* Estilos específicos para el paginador */
+.paginator-btn {
+  border-color: #28a745; /* Color del borde verde (success) */
+  color: #28a745; /* Color del texto */
+}
+
+.paginator-btn:hover {
+  background-color: #218838 !important; /* Color de fondo al hacer hover */
+  border-color: #1e7e34 !important; /* Color del borde al hacer hover */
+  color: #fff; /* Color del texto al hacer hover */
+}
+
+.paginator-btn:focus {
+  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.5) !important; /* Sombra al hacer focus */
+}
+
+.pagination .page-item.active .paginator-btn,
+.pagination .page-item .paginator-btn.active {
+  background-color: #218838 !important; /* Color de fondo para el botón activo */
+  border-color: #1e7e34 !important; /* Color del borde para el botón activo */
+  color: #fff; /* Color del texto para el botón activo */
+}
+
 
 ;

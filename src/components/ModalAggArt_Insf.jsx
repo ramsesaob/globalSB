@@ -353,6 +353,7 @@ const ModalAggArt_Insf = ({  show, onClose, articuloSeleccionado, insuficiencias
                       type="number"
                       value={articulo.stock_sistema}
                       onChange={(e) => handleStockSistemaChange(articulo.codigo, e.target.value)}
+                      min={0}
                     />
                   </td>
                   <td>
@@ -361,6 +362,7 @@ const ModalAggArt_Insf = ({  show, onClose, articuloSeleccionado, insuficiencias
                       type="number"
                       value={articulo.stock_fisico}
                       onChange={(e) => handleStockFisicoChange(articulo.codigo, e.target.value)}
+                      min={0}
                     />
                   </td>
                   <td>
@@ -370,6 +372,7 @@ const ModalAggArt_Insf = ({  show, onClose, articuloSeleccionado, insuficiencias
                       style={{ width: '100%' }}
                       value={articulo.observacion || ''}
                       onChange={(e) => handleObservacionChange(articulo.codigo, e.target.value)}
+                      maxLength={250} 
                     ></textarea>
                   </td>
                   <td>

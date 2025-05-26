@@ -56,6 +56,7 @@ const IndexPage = () => {
      
 
         const role = datosUsuario.user.role;
+        console.log(role);
   
         const sucursal = datosUsuario.user.sucursale?.descripcion || '';
 

@@ -2,13 +2,12 @@ import { useEffect, useState } from "react";
 import { carritoContext } from "./carritoContext"
 
 const Carrito = ({children}) => {
-
     const [validado, setValidado] = useState(false);
     const [datosUsuario, setDatosUsuario] = useState([]);
      //const [cart, setCart] = useState([]);
     const [cart, setCart] = useState(JSON.parse(localStorage.getItem("cart")) || []);
-   const apiBaseUrl = 'http://192.168.0.195/apick';
-  // const apiBaseUrl = 'https://globalbusiness.ddns.net:12443/apick';
+    const apiBaseUrl = 'http://192.168.0.195/apick';
+   //   const apiBaseUrl = 'https://globalbusiness.ddns.net:12443/apick';
     //const apiBaseUrl = 'https://globalbusiness.ddns.net:12443/api_local';
    // const apiBaseUrl = 'http://192.168.0.195/api_local';
     useEffect(() => {
@@ -16,7 +15,7 @@ const Carrito = ({children}) => {
       localStorage.setItem("cart", JSON.stringify(cart));
     }, [cart]);
 
-    const agregar = (producto, cant) =>{
+  /**   const agregar = (producto, cant) =>{
       if(producto.stock >= cant){
         setCart((currItems)=>{
             const isItemInCart = currItems.find((item)=> item.id === producto.id)
@@ -84,15 +83,15 @@ const Carrito = ({children}) => {
         // You can redirect the user to a login page or display an error message
       }
     };
-
+ */
     const salir = () => {
       setValidado(false)
       setDatosUsuario(null)
     }
-
+   
   return (
     <carritoContext.Provider 
-        value={{cart, agregar,  vaciar, eliminar, comprar, validado, setValidado, datosUsuario, setDatosUsuario, salir, apiBaseUrl}}>
+        value={{ validado, setValidado, datosUsuario, setDatosUsuario, salir, apiBaseUrl}}>
         {children}
     </carritoContext.Provider>
   )

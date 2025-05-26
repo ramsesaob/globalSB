@@ -98,6 +98,8 @@ const totalDescuentoSumadoFormateado = totalDescuentoSumado.toFixed(2);
       }
     }
   
+    
+  
     setIsLoading(true);
   
     const result = await Swal.fire({
@@ -209,6 +211,7 @@ const totalDescuentoSumadoFormateado = totalDescuentoSumado.toFixed(2);
                 className="form-control"
                 value={tasaDia}
                 onChange={(e) => setTasaDia(e.target.value)}
+                required
               />
             </div>
 

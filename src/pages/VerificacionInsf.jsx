@@ -447,6 +447,7 @@ const VerificacionInsf = () => {
                                 <option value="ERROR KLK">ERROR KLK</option>
                                 <option value="FALTANTE NO REPORTADO">FALTANTE NO REPORTADO</option>
                                 <option value="FALTANTE MAL REPORTADO">FALTANTE MAL REPORTADO</option>
+                                <option value="FALTANTE MAL AJUSTADO CICLICO">FALTANTE MAL AJUSTADO CICLICO</option>
                                 <option value="FALTANTE MAL REPORTADO CICLICO">FALTANTE MAL REPORTADO CICLICO</option>
                                 <option value="NO PROCEDE PARA AJUSTE">NO PROCEDE PARA AJUSTE</option>
                                 <option value="NO PROCEDE PARA COBRO">NO PROCEDE PARA COBRO</option>

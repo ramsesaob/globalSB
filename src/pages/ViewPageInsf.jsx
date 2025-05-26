@@ -244,9 +244,9 @@ const ViewPageInsf = () => {
                         }
 
                         {
-                            datosUsuario.user.role === 'user1' || datosUsuario.user.role === 'gerente' && (
-                              <td className={item.precio02 < 0 ? 'text-danger' : ''}>
-                                {item.precio02 < 0 ? item.precio02 : 0}
+                            (datosUsuario.user.role === 'user1' || datosUsuario.user.role === 'gerente')  && (
+                              <td className={`${item.precio02 < 0 ? 'text-danger' : ''}`}>
+                                {item.precio02 <= 0 ? item.precio02 : '' || '0'}
                               </td>
                             )
                       }

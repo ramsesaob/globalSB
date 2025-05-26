@@ -1,0 +1,144 @@
+[
+  {
+    "grupo": "BIENES Y SERVICIOS",
+    "subgrupos": [
+      {"subgrupo": "AGUA POTABLE", "banco": "PROVINCIAL"},
+      {"subgrupo": "ALARMAS", "banco": "PROVINCIAL"},
+      {"subgrupo": "CISTERNA DE AGUA", "banco": "PROVINCIAL"},
+      {"subgrupo": "COMIDAS Y REFRIGERIOS", "banco": "PROVINCIAL"},
+      {"subgrupo": "ENVIOS", "banco": "PROVINCIAL"},
+      {"subgrupo": "EVENTOS Y OBSEQUIOS", "banco": "PROVINCIAL"},
+      {"subgrupo": "FUMIGACION", "banco": "PROVINCIAL"},
+      {"subgrupo": "JARDINERIA", "banco": "PROVINCIAL"},
+      {"subgrupo": "LIMPIEZA", "banco": "PROVINCIAL"},
+      {"subgrupo": "MAQUINARIAS Y EQUIPOS", "banco": "PROVINCIAL"},
+      {"subgrupo": "MATERIALES DE CONSTRUCCION", "banco": "PROVINCIAL"},
+      {"subgrupo": "MEDICINA", "banco": "PROVINCIAL"},
+      {"subgrupo": "MEJORAS LOCALES", "banco": "PROVINCIAL"},
+      {"subgrupo": "MOBILIARIOS Y EQUIPOS", "banco": "PROVINCIAL"},
+      {"subgrupo": "PAPELERIA", "banco": "PROVINCIAL"},
+      {"subgrupo": "PASAJES_PROVEEDORES", "banco": "PROVINCIAL"},
+      {"subgrupo": "SEGURIDAD Y VIGILANCIA", "banco": "PROVINCIAL"},
+      {"subgrupo": "SEGUROS", "banco": "PROVINCIAL"},
+      {"subgrupo": "TECNOLOGÍA HARDWARE", "banco": "PROVINCIAL"},
+      {"subgrupo": "TECNOLOGÍA SOFTWARE", "banco": "PROVINCIAL"},
+      {"subgrupo": "TRANSPORTE_AEREO", "banco": "PROVINCIAL"},
+      {"subgrupo": "TRANSPORTE_MARITIMO", "banco": "PROVINCIAL"},
+      {"subgrupo": "TRANSPORTE_TERRESTRE", "banco": "PROVINCIAL"},
+      {"subgrupo": "USO TIENDA", "banco": "PROVINCIAL"},
+      {"subgrupo": "VEHICULOS", "banco": "PROVINCIAL"},
+      {"subgrupo": "VIATICOS_PROVEEDORES", "banco": "PROVINCIAL"},
+      {"subgrupo": "INMUEBLES", "banco": "PROVINCIAL"},
+      {"subgrupo": "MARKETING", "banco": "PROVINCIAL"},
+      {"subgrupo": "HOTELES_PROVEEDORES", "banco": "PROVINCIAL"}
+    ]
+  },
+  {
+    "grupo": "ENTES GUBERNAMENTALES",
+    "subgrupos": [
+      {"subgrupo": "ENTES GUBERNAMENTALES", "banco": "VENEZUELA"},
+      {"subgrupo": "IMA", "banco": "BANESCO"}
+    ]
+  },
+  {
+    "grupo": "HONORARIOS PROFESIONALES",
+    "subgrupos": [
+      {"subgrupo": "ASISTENCIA TECNICA", "banco": "PROVINCIAL"},
+      {"subgrupo": "SEGURIDAD INDUSTRIAL Y LABORAL", "banco": "PROVINCIAL"},
+      {"subgrupo": "MEDICINA OCUPACIONAL", "banco": "PROVINCIAL"}
+    ]
+  },
+  {
+    "grupo": "LOGISTICA",
+    "subgrupos": [
+      {"subgrupo": "ADUANAS", "banco": "TODOS"},
+      {"subgrupo": "CARGA Y DESCARGA", "banco": "PROVINCIAL"},
+      {"subgrupo": "FLETES_AEREOS", "banco": ""},
+      {"subgrupo": "TRANSPORTE_MARITIMO", "banco": "TODOS"},
+      {"subgrupo": "FLETES_TERRESTRE", "banco": "PROVINCIAL"},
+      {"subgrupo": "MERCANCIA", "banco": "PROVINCIAL"}
+    ]
+  },
+  {
+    "grupo": "NOMINA PERSONAL",
+    "subgrupos": [
+      {"subgrupo": "NOMINA", "banco": "PROVINCIAL"},
+      {"subgrupo": "VIATICOS", "banco": "PROVINCIAL"},
+      {"subgrupo": "HOTELES", "banco": "PROVINCIAL"},
+      {"subgrupo": "PARAFISCALES", "banco": "VENEZUELA"},
+      {"subgrupo": "DOTACION AL PERSONAL", "banco": "PROVINCIAL"},
+      {"subgrupo": "TRANSPORTE DE PERSONAL", "banco": "PROVINCIAL"}
+    ]
+  },
+  {
+    "grupo": "RECURSOS POR INVERSIONES",
+    "subgrupos": [
+      {"subgrupo": "RECURSOS_INVERSIONES", "banco": "TODOS"}
+    ]
+  },
+  {
+    "grupo": "SERVICIOS BASICOS",
+    "subgrupos": [
+      {"subgrupo": "AGUA", "banco": "VENEZUELA"},
+      {"subgrupo": "ASEO", "banco": "VENEZUELA"},
+      {"subgrupo": "ELECTRICIDAD", "banco": "VENEZUELA"},
+      {"subgrupo": "TELEFONO", "banco": "VENEZUELA"},
+      {"subgrupo": "INTERNET", "banco": "VENEZUELA"}
+    ]
+  },
+  {
+    "grupo": "SOCIO1",
+    "subgrupos": [
+      {"subgrupo": "H-228", "banco": "BANESCO"},
+      {"subgrupo": "YESER", "banco": "BANESCO"}
+    ]
+  },
+  {
+    "grupo": "SOCIO2",
+    "subgrupos": [
+      {"subgrupo": "H-463", "banco": "BANESCO"},
+      {"subgrupo": "MALAK", "banco": "BANESCO"}
+    ]
+  },
+  {
+    "grupo": "SOCIO3",
+    "subgrupos": [
+      {"subgrupo": "I-456", "banco": "BANESCO"}
+    ]
+  },
+  {
+    "grupo": "SOCIO4",
+    "subgrupos": [
+      {"subgrupo": "O-123", "banco": "BANESCO"}
+    ]
+  },
+  {
+    "grupo": "SOCIO5",
+    "subgrupos": [
+      {"subgrupo": "MOH", "banco": "BANESCO"}
+    ]
+  },
+  {
+    "grupo": "ALQUILER Y CONDOMINIO",
+    "subgrupos": [
+      {"subgrupo": "ALQUILER", "banco": "PROVINCIAL"},
+      {"subgrupo": "CONDOMINIO", "banco": "PROVINCIAL"},
+      {"subgrupo": "ALQUILER Y CONDOMINIO", "banco": "PROVINCIAL"},
+      {"subgrupo": "ESTACIONAMIENTO/PUBLICIDAD", "banco": "PROVINCIAL"}
+    ]
+  },
+  {
+    "grupo": "CLIENTES",
+    "subgrupos": [
+      {"subgrupo": "REINTEGRO CLIENTES", "banco": "PROVINCIAL"}
+    ]
+  },
+  {
+    "grupo": "INTERCOMPAÑIAS PROVEEDORES",
+    "subgrupos": [
+      {"subgrupo": "DISTRIBUIDORAS", "banco": "TODAS"},
+      {"subgrupo": "SERVICIO", "banco": "TODAS"},
+      {"subgrupo": "TIENDAS", "banco": "TODAS"}
+    ]
+  }
+]

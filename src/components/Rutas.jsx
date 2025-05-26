@@ -39,6 +39,22 @@ import VerificacionInsf from '../pages/VerificacionInsf';
 import ViewItemsDiferencia from '../pages/ViewItemsDiferencia';
 import IndexPersonDescuentos from '../pages/IndexPersonDescuentos';
 import IndexAjustesProc from '../pages/IndexAjustesProc';
+import FormularioPagos from '../pages/FormularioPagos';
+import PageDañado from '../pages/PageDañado';
+import AgregarArticulos from './AgregarARticulos';
+import PlantillaTrabajador from '../pages/PlantillaTrabajador';
+
+import IndexDan from '../pages/IndexDan';
+import ViewPageDan from '../pages/ViewPageDAn';
+import BuscadorImagen from '../pages/BuscadorImagen';
+import Prueba from '../pages/Prueba';
+import IndexItemsDanados from '../pages/IndexItemsDanados';
+import Pagos_internos from '../pages/Pagos_internos';
+import IndexAprobarPagos from '../pages/IndexAprobarPagos';
+import Provisiones from '../pages/Provisiones';
+import IndexAprobarProvisiones from '../pages/IndexAprobarProvisiones';
+import IndexRevisionProvisiones from '../pages/IndexRevisionProvisiones';
+
 
 
 
@@ -53,13 +69,8 @@ const Rutas = () => {
         <Route path="/inicio" element={<Inicio />} />
         <Route path="/inicio2" element={<Inicio2 />} />
         
-      
-      
-      
-     
         <Route path="*" element={<Inicio />} />
       
-  
         <Route element={<RutasProtegidas validado={validado}/>}>
         <Route path="/formulario" element={<Formulario />} />
         <Route path="/IndexPage" element={<IndexPage />} />
@@ -91,6 +102,24 @@ const Rutas = () => {
         <Route path="/ViewItemsDiferencia" element={<ViewItemsDiferencia />} />
         <Route path="/IndexPersonDescuentos" element={<IndexPersonDescuentos />} />
         <Route path="/IndexAjustesProc" element={<IndexAjustesProc />} />
+        <Route path="/FormularioPagos" element={<FormularioPagos />} />
+        <Route path="/PageDañado" element={<PageDañado />} />
+        <Route path="/AgregarArticulos" element={<AgregarArticulos />} />
+        <Route path="/PlantillaTrabajador" element={<PlantillaTrabajador />} /> 
+        <Route path="/IndexDan" element={<IndexDan />} /> 
+        <Route path="/ViewPageDan/:id" element={<ViewPageDan />} />
+        <Route path="/BuscadorImagen" element={<BuscadorImagen />} />
+          <Route path="/prueba" element={<Prueba />} />
+        <Route path="/IndexItemsDanados" element={<IndexItemsDanados />} />
+        <Route path="/Pagos_internos" element={<Pagos_internos />} />
+        <Route path="/IndexAprobarPagos" element={<IndexAprobarPagos />} />
+           <Route path="/Provisiones" element={<Provisiones />} />
+            <Route path="/IndexAprobarProvisiones" element={<IndexAprobarProvisiones />} />
+             <Route path="/IndexRevisionProvisiones" element={<IndexRevisionProvisiones />} />
+        
+        
+        
+       
 
         
 
@@ -103,7 +132,7 @@ const Rutas = () => {
         
     
 
-          </Route>
+        </Route>
       </Routes>
       
       <Footer />
